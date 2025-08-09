@@ -112,9 +112,21 @@ void update_RENDER(void){
 	SDL_RenderPresent(g_renderer);
 }
 
-
+int t = 0;
 void compute_FRAME(void){
 	
-	// memset(display_buffer, default_pixel, sizeof(display_buffer));
-	return;
+	memset(display_buffer, default_pixel, sizeof(display_buffer));
+	
+	for(int y = 0; y < HEIGHT; y++) {
+		for(int x = 0; x < WIDTH; x++){
+			uint8_t R = (256*x)/WIDTH;
+			uint8_t G = (256*y)/HEIGHT;
+			uint8_t B = (256*t)/320;
+			
+			display_buffer[get_idx(x,y)] |= (R << 16) | (G << 8) | B;
+		}
+	}
+	
+	t++;
+	t %= 320;
 }

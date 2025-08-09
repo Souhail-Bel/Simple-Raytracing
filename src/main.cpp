@@ -9,7 +9,7 @@
 using namespace std;
 using namespace std::chrono;
 
-const int FRAMERATE = 30;
+const int FRAMERATE = 60;
 constexpr int FRAME_DELAY_MS = 1e3/FRAMERATE;
 
 
@@ -34,7 +34,10 @@ int main(int argc, char** argv){
 		// cout << "FPS: " << 1e6/delta_time.count() << endl;
 		
 		this_thread::sleep_for(chrono::milliseconds(FRAME_DELAY_MS));
+		// is_running = false;
 	}
+	
+	// getchar();
 	
 	close_SDL();
 }
