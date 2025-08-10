@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include "display.h"
-#include "vec3.h"
 
 using namespace std;
 using namespace std::chrono;

@@ -11,6 +11,7 @@
 using namespace std;
 
 #include "display.h"
+#include "color.h"
 
 
 SDL_Window* 	g_window;
@@ -119,11 +120,11 @@ void compute_FRAME(void){
 	
 	for(int y = 0; y < HEIGHT; y++) {
 		for(int x = 0; x < WIDTH; x++){
-			uint8_t R = (256*x)/WIDTH;
-			uint8_t G = (256*y)/HEIGHT;
-			uint8_t B = (256*t)/320;
+			auto pixel_color = color((256*x)/WIDTH,
+									(256*y)/HEIGHT,
+									(256*t)/320);
 			
-			display_buffer[get_idx(x,y)] |= (R << 16) | (G << 8) | B;
+			display_buffer[get_idx(x,y)] |= get_color(pixel_color);
 		}
 	}
 	
