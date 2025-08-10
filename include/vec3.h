@@ -6,16 +6,16 @@
 class vec3 {
 	public:
 		// Base components
-		float e[3];
+		double e[3];
 		
 		// Empty vector with initializer list
 		vec3() : e(0, 0, 0) {}
 		
-		vec3(float x, float y, float z) : e(x, y, z) {}
+		vec3(float x, double y, double z) : e(x, y, z) {}
 		
-		float x() const {return e[0];}
-		float y() const {return e[1];}
-		float z() const {return e[2];}
+		double x() const {return e[0];}
+		double y() const {return e[1];}
+		double z() const {return e[2];}
 		
 		
 }
