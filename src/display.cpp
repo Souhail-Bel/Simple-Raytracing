@@ -139,7 +139,9 @@ void update_RENDER(void){
 
 
 color ray_color(const ray& r) {
-	return color();
+	vec3 dir = normalized(r.direction());
+	float a = 0.5*(dir.y() + 1.);
+	return (1-a) * color(1) + a * color(.4, .6, 1);
 }
 
 
