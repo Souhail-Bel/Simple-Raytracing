@@ -10,14 +10,33 @@
 
 using namespace std;
 
-#include "display.h"
+#include "vec3.h"
 #include "color.h"
 #include "ray.h"
+
+#include "display.h"
+
+
+
+// Viewport pixel grid set up
+// Note how the y-axis is inverted
+vec3 viewport_h = vec3(Camera.VIEWPORT_WIDTH, 0, 0);
+vec3 viewport_v = vec3(0, -Camera.VIEWPORT_HEIGHT, 0);
+
+// Pixel-to-pixel delta vectors
+vec3 pixel_delta_h = viewport_h / WIDTH;
+vec3 pixel_delta_v = viewport_v / HEIGHT;
+
+// Find (0, 0) of the viewport (upper-left)
+point3 viewport_00 = Camera.eye_point - vec3(0, 0, Camera.focal_length)
+				- viewport_h/2 - viewport_v/2;
+point3 pixel_00 = viewport_00 + 0.5 * (pixel_delta_h + pixel_delta_v);
+
 
 
 // SDL-specific
 // #if is used for region
-#if
+#if 1
 SDL_Window* 	g_window;
 SDL_Renderer* 	g_renderer;
 SDL_Texture*	g_texture;
@@ -118,21 +137,29 @@ void update_RENDER(void){
 }
 #endif
 
-int t = 0;
+
+color ray_color(const ray& r) {
+	return color();
+}
+
+
 void compute_FRAME(void){
 	
 	memset(display_buffer, default_pixel, sizeof(display_buffer));
 	
 	for(int y = 0; y < HEIGHT; y++) {
 		for(int x = 0; x < WIDTH; x++){
-			auto pixel_color = color((256*x)/WIDTH,
-									(256*y)/HEIGHT,
-									(256*t)/320);
+			point3 pixel_center = pixel_00
+								+ x * pixel_delta_h
+								+ y * pixel_delta_v;
+			
+			vec3 ray_dir = pixel_center - Camera.eye_point;
+			
+			ray r(Camera.eye_point, ray_dir);
+			
+			color pixel_color = ray_color(r);
 			
 			display_buffer[get_idx(x,y)] |= get_color(pixel_color);
 		}
 	}
-	
-	t++;
-	t %= 320;
 }

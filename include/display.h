@@ -7,6 +7,8 @@
 #include <cstdint>
 
 #include "vec3.h"
+#include "color.h"
+#include "ray.h"
 
 using namespace std;
 
@@ -17,11 +19,13 @@ constexpr int WIN_SIZE 	= WIDTH*HEIGHT;
 constexpr float ASPECT_RATIO = (1. * WIDTH)/HEIGHT;
 
 
-// Camera parameters
-float focal_length = 1.;
-const float VIEWPORT_HEIGHT = 2.;
-constexpr float VIEWPORT_WIDTH = ASPECT_RATIO * VIEWPORT_HEIGHT;
-point3 camera_center = point3(0, 0, 0);
+// Camera definition
+struct {
+	float VIEWPORT_HEIGHT = 2.;
+	float VIEWPORT_WIDTH = ASPECT_RATIO * VIEWPORT_HEIGHT;
+	point3 eye_point = point3(0, 0, 0);
+	float focal_length = 1.; // Distance between viewport and eye point
+} Camera;
 
 
 
@@ -46,6 +50,8 @@ void init_SDL(void);
 void close_SDL(void);
 void handle_INPUT(void);
 void update_RENDER(void);
+
+color ray_color(const ray& r);
 void compute_FRAME(void);
 
 #endif

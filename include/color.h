@@ -8,7 +8,7 @@
 using color = vec3;
 
 // ARGB8888
-uint32_t get_color(const color& pixel_color){
+inline uint32_t get_color(const color& pixel_color){
 	uint8_t R = pixel_color.x();
 	uint8_t G = pixel_color.y();
 	uint8_t B = pixel_color.z();

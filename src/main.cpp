@@ -33,11 +33,11 @@ int main(int argc, char** argv){
 		
 		// cout << "FPS: " << 1e6/delta_time.count() << endl;
 		
-		this_thread::sleep_for(chrono::milliseconds(FRAME_DELAY_MS));
-		// is_running = false;
+		// this_thread::sleep_for(chrono::milliseconds(FRAME_DELAY_MS));
+		is_running = false;
 	}
 	
-	// getchar();
+	getchar();
 	
 	close_SDL();
 }
