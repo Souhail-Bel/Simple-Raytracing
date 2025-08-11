@@ -138,7 +138,24 @@ void update_RENDER(void){
 #endif
 
 
+bool hit_sphere(const point3& center, float radius, const ray& r){
+	vec3 OC = center - r.origin();
+	
+	// Solves quadratic equation for sphere
+	double a = r.direction().len_sqr();
+	double b = -2. * dot(r.direction(), OC);
+	double c = OC.len_sqr() - radius * radius;
+	
+	return ((b*b - 4*a*c) >= 0);
+}
+
+
 color ray_color(const ray& r) {
+	point3 center_sphere = point3(0, 0, -1);
+	if(hit_sphere(center_sphere, 0.5, r))
+		return color(.5);
+	
+	// BG
 	vec3 dir = normalized(r.direction());
 	float a = 0.5*(dir.y() + 1.);
 	return (1-a) * color(1) + a * color(.4, .6, 1);
