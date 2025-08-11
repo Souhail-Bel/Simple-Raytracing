@@ -12,6 +12,7 @@ using namespace std;
 const int WIDTH  		= 640;
 const int HEIGHT 		= 480;
 constexpr int WIN_SIZE 	= WIDTH*HEIGHT;
+constexpr float ASPECT_RATIO = (1.0 * WIDTH)/HEIGHT;
 
 const uint32_t default_pixel = 0xFFU << 24;
 
