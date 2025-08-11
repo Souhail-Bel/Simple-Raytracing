@@ -6,13 +6,24 @@
 #include <vector>
 #include <cstdint>
 
+#include "vec3.h"
+
 using namespace std;
 
 // Window dimensions
 const int WIDTH  		= 640;
 const int HEIGHT 		= 480;
 constexpr int WIN_SIZE 	= WIDTH*HEIGHT;
-constexpr float ASPECT_RATIO = (1.0 * WIDTH)/HEIGHT;
+constexpr float ASPECT_RATIO = (1. * WIDTH)/HEIGHT;
+
+
+// Camera parameters
+float focal_length = 1.;
+const float VIEWPORT_HEIGHT = 2.;
+constexpr float VIEWPORT_WIDTH = ASPECT_RATIO * VIEWPORT_HEIGHT;
+point3 camera_center = point3(0, 0, 0);
+
+
 
 const uint32_t default_pixel = 0xFFU << 24;
 

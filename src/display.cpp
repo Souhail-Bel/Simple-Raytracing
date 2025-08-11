@@ -12,8 +12,12 @@ using namespace std;
 
 #include "display.h"
 #include "color.h"
+#include "ray.h"
 
 
+// SDL-specific
+// #if is used for region
+#if
 SDL_Window* 	g_window;
 SDL_Renderer* 	g_renderer;
 SDL_Texture*	g_texture;
@@ -112,6 +116,7 @@ void update_RENDER(void){
 	SDL_RenderCopy(g_renderer, g_texture, NULL, NULL);
 	SDL_RenderPresent(g_renderer);
 }
+#endif
 
 int t = 0;
 void compute_FRAME(void){
