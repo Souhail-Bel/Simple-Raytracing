@@ -1,6 +1,12 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
+#include <memory>
+#include <vector>
+
+using std::shared_ptr;
+using std::make_shared;
+
 #include "utils/ray.h"
 
 class hit_record {
@@ -23,4 +29,36 @@ class IHittable {
 		
 		virtual bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const = 0;
 };
+
+class hittable_list : public IHittable {
+	public:
+		std::vector<shared_ptr<IHittable>> objects;
+		
+		hittable_list() {}
+		hittable_list(shared_ptr<IHittable> obj) {add(obj);}
+		
+		void clear() {objects.clear();}
+		
+		void add(shared_ptr<IHittable> obj){
+			objects.push_back(obj);
+		}
+		
+		bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override {
+			
+			hit_record temp_rec;
+			bool got_hit = false;
+			double closest = ray_tmax;
+			
+			for(const auto& obj : objects){
+				if(obj -> hit(r, ray_tmin, closest, temp_rec)) {
+					got_hit = true;
+					closest = temp_rec.t;
+					rec = temp_rec;
+				}
+			}
+			
+			return got_hit;
+		}
+};
+
 #endif

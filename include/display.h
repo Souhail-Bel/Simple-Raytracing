@@ -51,6 +51,7 @@ void close_SDL(void);
 void handle_INPUT(void);
 void update_RENDER(void);
 
+void setup_SCENE(void);
 color ray_color(const ray& r);
 void compute_FRAME(void);
 

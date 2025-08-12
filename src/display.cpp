@@ -14,6 +14,8 @@ using namespace std;
 
 #include "display.h"
 
+#include <limits>
+const double inf = std::numeric_limits<double>::infinity();
 
 
 // Viewport pixel grid set up
@@ -29,6 +31,10 @@ vec3 pixel_delta_v = viewport_v / HEIGHT;
 point3 viewport_00 = Camera.eye_point - vec3(0, 0, Camera.focal_length)
 				- viewport_h/2 - viewport_v/2;
 point3 pixel_00 = viewport_00 + 0.5 * (pixel_delta_h + pixel_delta_v);
+
+
+// Scene parameters
+hittable_list scene;
 
 
 
@@ -135,30 +141,17 @@ void update_RENDER(void){
 }
 #endif
 
+void setup_SCENE(void){
+	scene.add(make_shared<Sphere>(point3(0,0,-1), .5));
 
-double hit_sphere(const point3& center, float radius, const ray& r){
-	vec3 OC = center - r.origin();
-	
-	// Solves quadratic equation for sphere
-	// b' is used because b is even
-	double a = r.direction().len_sqr();
-	double b_pr = dot(r.direction(), OC);
-	double c = OC.len_sqr() - radius * radius;
-	
-	double del = (b_pr*b_pr - a*c);
-	if(del < 0)
-		return 0;
-	return (b_pr - sqrt(del)) / a;
+	scene.add(make_shared<Sphere>(point3(0,0,1), .5));
 }
 
 
 color ray_color(const ray& r) {
-	point3 center_sphere = point3(0, 0, -1);
-	double t = hit_sphere(center_sphere, 0.5, r);
-	if(t > 0){
-		vec3 N = normalized(r.at(t) - center_sphere);
-		return .5* color(N.x()+1, N.y()+1, N.z()+1);
-	}
+	hit_record rec;
+	if(scene.hit(r, 0, inf, rec))
+		return color(1);
 	
 	// BG
 	vec3 dir = normalized(r.direction());

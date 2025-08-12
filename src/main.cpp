@@ -16,6 +16,8 @@ constexpr int FRAME_DELAY_MS = 1e3/FRAMERATE;
 int main(int argc, char** argv){
 	init_SDL();
 	
+	setup_SCENE();
+	
 	is_running = true;
 	
 	while(is_running){
