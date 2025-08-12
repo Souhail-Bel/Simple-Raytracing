@@ -41,7 +41,7 @@ class Sphere : public IHittable {
 			
 			rec.t = t;
 			rec.p = r.at(t);
-			rec.normal = (rec.p - center) / radius;
+			rec.set_face_normal(r, (rec.p - center) / radius);
 			
 			return true;
 		}
