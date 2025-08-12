@@ -6,9 +6,7 @@
 #include <vector>
 #include <cstdint>
 
-#include "vec3.h"
-#include "color.h"
-#include "ray.h"
+#include "utils.h"
 
 using namespace std;
 

@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "vec3.h"
+#include "utils/vec3.h"
 
 using color = vec3;
 

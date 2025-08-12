@@ -4,7 +4,7 @@
 // P = Orig + t * Pos
 // t >= 0
 
-#include "vec3.h"
+#include "utils/vec3.h"
 
 class ray {
 	private:
