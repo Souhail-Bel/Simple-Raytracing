@@ -24,7 +24,9 @@ struct {
 	float VIEWPORT_HEIGHT = 2.;
 	float VIEWPORT_WIDTH = ASPECT_RATIO * VIEWPORT_HEIGHT;
 	point3 eye_point = point3(0, 0, 0);
-	float focal_length = 1.; // Distance between viewport and eye point
+	// Set to 1.9248599884 for a very nice FOV
+	// Currently set at FOV 120°
+	float focal_length = 0.7698003589195; // Distance between viewport and eye point
 } Camera;
 
 
