@@ -14,7 +14,7 @@ class Sphere : public IHittable {
 	public:
 		Sphere(const point3& c, float r) : center(c), radius(std::fabsf(r)) {}
 		
-		bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override {
+		bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
 			vec3 OC = center - r.origin();
 	
 			// Solves quadratic equation for sphere
@@ -32,10 +32,10 @@ class Sphere : public IHittable {
 			
 			// Root within range
 			double t = (b_pr - sqrt_del) / a;
-			if(t <= ray_tmin || t >= ray_tmax) {
+			if(!ray_t.has_open(t)) {
 				t = (b_pr + sqrt_del) / a;
 				
-				if(t <= ray_tmin || t >= ray_tmax)
+				if(!ray_t.has_open(t))
 					return false;
 			}
 			

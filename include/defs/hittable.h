@@ -27,7 +27,7 @@ class IHittable {
 	public:
 		virtual ~IHittable() = default;
 		
-		virtual bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const = 0;
+		virtual bool hit(const ray& r, interval ray_t, hit_record& rec) const = 0;
 };
 
 
@@ -46,14 +46,14 @@ class hittable_list : public IHittable {
 			objects.push_back(obj);
 		}
 		
-		bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override {
+		bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
 			
 			hit_record temp_rec;
 			bool got_hit = false;
-			double closest = ray_tmax;
+			double closest = ray_t.max;
 			
 			for(const auto& obj : objects){
-				if(obj -> hit(r, ray_tmin, closest, temp_rec)) {
+				if(obj -> hit(r, interval(ray_t.min, closest), temp_rec)) {
 					got_hit = true;
 					closest = temp_rec.t;
 					rec = temp_rec;

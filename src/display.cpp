@@ -148,7 +148,7 @@ void setup_SCENE(void){
 
 color ray_color(const ray& r) {
 	hit_record rec;
-	if(scene.hit(r, 0, inf, rec))
+	if(scene.hit(r, interval::positive, rec))
 		return .5 * (rec.normal + color(1));
 	
 	
