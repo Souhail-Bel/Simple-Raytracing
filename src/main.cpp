@@ -25,8 +25,6 @@ int main(int argc, char** argv){
 		
 		handle_INPUT();
 		
-		compute_FRAME();
-		
 		update_RENDER();
 		
 		// auto end_time	= high_resolution_clock::now();

@@ -1,6 +1,7 @@
 #include "utils.h"
 
 
+
 // ARGB8888
 uint32_t get_color(const color& pixel_color){
 	// Mapping 1.0 to 255

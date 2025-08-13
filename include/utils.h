@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <limits>
+#include <cstdint>
 
 const double inf = std::numeric_limits<double>::infinity();
 
