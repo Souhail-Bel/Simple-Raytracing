@@ -34,7 +34,7 @@ point3 pixel_00 = viewport_00 + 0.5 * (pixel_delta_h + pixel_delta_v);
 
 
 // Scene parameters
-hittable_list scene(make_shared<Sphere>(point3(0,0,-1), .5));
+hittable_list scene;
 
 
 
@@ -142,12 +142,14 @@ void update_RENDER(void){
 #endif
 
 void setup_SCENE(void){
-	// scene.add(make_shared<Sphere>(point3(0,0,-1), .5));
-return;
+	scene = hittable_list(make_shared<Sphere>(point3(0,0,-1), .5));
+	// cout << scene.objects.size() << endl; // gives 1
+	return;
 }
 
 
 color ray_color(const ray& r) {
+	// cout << scene.objects.size() << endl; // gives 1
 	hit_record rec;
 	if(scene.hit(r, 0, inf, rec))
 		return .5 * (rec.normal + color(1));

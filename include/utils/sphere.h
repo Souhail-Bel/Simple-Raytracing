@@ -32,10 +32,10 @@ class Sphere : public IHittable {
 			
 			// Root within range
 			double t = (b_pr - sqrt_del) / a;
-			if(t <= ray_tmin || t <= ray_tmax) {
+			if(t <= ray_tmin || t >= ray_tmax) {
 				t = (b_pr + sqrt_del) / a;
 				
-				if(t <= ray_tmin || t <= ray_tmax)
+				if(t <= ray_tmin || t >= ray_tmax)
 					return false;
 			}
 			
