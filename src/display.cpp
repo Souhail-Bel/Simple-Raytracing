@@ -139,7 +139,9 @@ void update_RENDER(void){
 #endif
 
 void setup_SCENE(void){
-	scene = hittable_list(make_shared<Sphere>(point3(0,0,-1), .5));
+	scene.add(make_shared<Sphere>(point3(0,0,-1), .5));
+	scene.add(make_shared<Sphere>(point3(10,10,-20), 10));
+	scene.add(make_shared<Sphere>(point3(10,-10,-20), 50));
 	return;
 }
 
