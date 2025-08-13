@@ -14,9 +14,6 @@ using namespace std;
 
 #include "display.h"
 
-#include <limits>
-const double inf = std::numeric_limits<double>::infinity();
-
 
 // Viewport pixel grid set up
 // Note how the y-axis is inverted
@@ -143,13 +140,11 @@ void update_RENDER(void){
 
 void setup_SCENE(void){
 	scene = hittable_list(make_shared<Sphere>(point3(0,0,-1), .5));
-	// cout << scene.objects.size() << endl; // gives 1
 	return;
 }
 
 
 color ray_color(const ray& r) {
-	// cout << scene.objects.size() << endl; // gives 1
 	hit_record rec;
 	if(scene.hit(r, 0, inf, rec))
 		return .5 * (rec.normal + color(1));

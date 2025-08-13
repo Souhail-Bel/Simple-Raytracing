@@ -30,6 +30,9 @@ class IHittable {
 		virtual bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const = 0;
 };
 
+
+// Shared pointers allow multiple geometries to share a common instance (i.e. multiple spheres, same material)
+
 class hittable_list : public IHittable {
 	public:
 		std::vector<shared_ptr<IHittable>> objects;
