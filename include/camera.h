@@ -36,6 +36,11 @@ class Camera {
 		
 		Camera(const hittable_list& scene) : world(scene) {}
 		
+		~Camera(){
+			if(display_buffer)
+				free(display_buffer);
+		}
+		
 		// init function
 		void init_CAMERA(const int WIDTH, const int HEIGHT) {
 			
