@@ -7,7 +7,7 @@
 using std::shared_ptr;
 using std::make_shared;
 
-#include "utils/ray.h"
+#include "utils.h"
 
 class hit_record {
 	public:

@@ -1,8 +1,8 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "utils/vec3.h"
-#include "utils/hittable.h"
+#include "utils.h"
+#include "defs/hittable.h"
 
 // Sphere to inherit from hittable interface
 
