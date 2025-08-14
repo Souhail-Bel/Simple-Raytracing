@@ -135,6 +135,8 @@ void Camera::compute_FRAME(void) const {
 				pixel_color += ray_color(r);
 			}
 			
+			pixel_color *= pixel_samples_scale;
+			
 			display_buffer[y * WIN_WIDTH + x] |= get_color(pixel_color);
 		}
 	}
