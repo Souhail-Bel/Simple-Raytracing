@@ -7,6 +7,7 @@
 
 using color = vec3;
 
+// Defined in utils.cpp
 uint32_t get_color(const color& pixel_color);
 
 #endif

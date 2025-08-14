@@ -3,6 +3,12 @@
 
 #include <limits>
 #include <cstdint>
+#include <random>
+
+// Get rand double in [0,1[
+inline double get_rand_double(void);
+// Get rand double in [min,max[
+inline double get_rand_double(double min, double max);
 
 const double inf = std::numeric_limits<double>::infinity();
 

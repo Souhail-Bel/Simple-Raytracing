@@ -10,11 +10,9 @@
 
 using namespace std;
 
-#include "utils.h"
-#include "camera.h"
-
 #include "display.h"
 
+#include "camera.h"
 
 // Scene parameters
 hittable_list scene;
