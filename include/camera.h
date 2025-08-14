@@ -28,6 +28,11 @@ class Camera {
 		
 		uint32_t default_pixel = 0xFFU << 24;
 		
+		// get color func
+		color ray_color(const ray& r) const;
+		
+		ray get_ray(int x, int y) const;
+		
 	public:
 		uint32_t* display_buffer = NULL;
 		int display_buffer_size;
@@ -72,9 +77,6 @@ class Camera {
 			pixel_00 = viewport_00 + 0.5 * (pixel_delta_h + pixel_delta_v);
 		}
 		
-		// get color func
-		color ray_color(const ray& r) const;
-		
 		// compute frame func
 		void compute_FRAME(void) const;
 		
@@ -86,6 +88,14 @@ class Camera {
 		}
 };
 
+ray Camera::get_ray(int x, int y) const {
+	// Ray directed to pixel (x, y)
+	point3 pixel_center = pixel_00
+							+ x * pixel_delta_h
+							+ y * pixel_delta_v;
+	
+	return ray(eye_point, pixel_center - eye_point);
+}
 
 color Camera::ray_color(const ray& r) const {
 	hit_record rec;
@@ -106,13 +116,8 @@ void Camera::compute_FRAME(void) const {
 	
 	for(int y = 0; y < WIN_HEIGHT; y++) {
 		for(int x = 0; x < WIN_WIDTH; x++){
-			point3 pixel_center = pixel_00
-								+ x * pixel_delta_h
-								+ y * pixel_delta_v;
 			
-			vec3 ray_dir = pixel_center - eye_point;
-			
-			ray r(eye_point, ray_dir);
+			ray r = get_ray(x, y);
 			
 			color pixel_color = ray_color(r);
 			
