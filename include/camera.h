@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "defs.h"
+#include "utils.h"
 
 class Camera {
 	private:
@@ -28,14 +28,21 @@ class Camera {
 		
 		uint32_t default_pixel = 0xFFU << 24;
 		
+		double pixel_samples_scale;
+		
+		
 		// get color func
 		color ray_color(const ray& r) const;
 		
 		ray get_ray(int x, int y) const;
 		
+		
 	public:
 		uint32_t* display_buffer = NULL;
 		int display_buffer_size;
+		
+		int samples_per_pixel = 10;
+		
 		
 		Camera() {}
 		
@@ -55,6 +62,8 @@ class Camera {
 			
 			float ASPECT_RATIO = (1. * WIN_WIDTH)/WIN_HEIGHT;
 			VIEWPORT_WIDTH = ASPECT_RATIO * VIEWPORT_HEIGHT;
+			
+			pixel_samples_scale = 1. / samples_per_pixel;
 			
 			display_buffer_size = sizeof(uint32_t) * WIN_SIZE;
 			display_buffer = (uint32_t*) malloc(display_buffer_size);
@@ -90,9 +99,12 @@ class Camera {
 
 ray Camera::get_ray(int x, int y) const {
 	// Ray directed to pixel (x, y)
+	
+	vec3 offset = vec3(get_rand_double()-.5, get_rand_double()-.5, 0);
+	
 	point3 pixel_center = pixel_00
-							+ x * pixel_delta_h
-							+ y * pixel_delta_v;
+							+ (x + offset.x()) * pixel_delta_h
+							+ (y + offset.y()) * pixel_delta_v;
 	
 	return ray(eye_point, pixel_center - eye_point);
 }
@@ -116,10 +128,12 @@ void Camera::compute_FRAME(void) const {
 	
 	for(int y = 0; y < WIN_HEIGHT; y++) {
 		for(int x = 0; x < WIN_WIDTH; x++){
+			color pixel_color(0);
 			
-			ray r = get_ray(x, y);
-			
-			color pixel_color = ray_color(r);
+			for(int sample = 0; sample < samples_per_pixel; sample++) {
+				ray r = get_ray(x, y);
+				pixel_color += ray_color(r);
+			}
 			
 			display_buffer[y * WIN_WIDTH + x] |= get_color(pixel_color);
 		}

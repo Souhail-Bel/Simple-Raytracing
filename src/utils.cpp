@@ -1,15 +1,6 @@
 #include "utils.h"
 
-inline double get_rand_double(void) {
-	static std::random_device rd;
-	static std::mt19937 gen(rd()); 
-	static std::uniform_real_distribution<> dis(0.0, 1.0); 
-	return dis(gen);
-}
 
-inline double get_rand_double(double min, double max) {
-	return min + (max - min)*get_rand_double();
-}
 
 
 // ARGB8888
