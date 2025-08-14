@@ -71,14 +71,14 @@ class Camera {
 		}
 		
 		// get color func
-		color ray_color(const ray& r);
+		color ray_color(const ray& r) const;
 		
 		// compute frame func
-		void compute_FRAME(void);
+		void compute_FRAME(void) const;
 };
 
 
-color Camera::ray_color(const ray& r) {
+color Camera::ray_color(const ray& r) const {
 	hit_record rec;
 	if(world.hit(r, interval::positive, rec))
 		return .5 * (rec.normal + color(1));
@@ -91,7 +91,7 @@ color Camera::ray_color(const ray& r) {
 }
 
 
-void Camera::compute_FRAME(void){
+void Camera::compute_FRAME(void) const {
 	
 	memset(display_buffer, default_pixel, display_buffer_size);
 	
