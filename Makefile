@@ -1,5 +1,6 @@
 # Project configs
 debug 		?= 0
+sampling	?= 0
 NAME		:= raytracer
 SRC_DIR		:= src
 BUILD_DIR	:= build
@@ -19,6 +20,10 @@ LFLAGS 		:= -lSDL2 -lm
 
 ifeq ($(debug), 1)
 	CFLAGS 	:= $(CFLAGS) -g -D DEBUG_MODE
+endif
+
+ifeq ($(sampling), 1)
+	CFLAGS := $(CFLAGS) -D SAMPLING_MODE
 endif
 
 

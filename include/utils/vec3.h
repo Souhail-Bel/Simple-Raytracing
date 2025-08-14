@@ -52,6 +52,18 @@ class vec3 {
 		double len() const {
 			return std::sqrt(len_sqr());
 		}
+		
+		static vec3 random() {
+			return vec3(get_rand_double(),
+				get_rand_double(),
+				get_rand_double());
+		}
+		
+		static vec3 random(double min, double max) {
+			return vec3(get_rand_double(min, max),
+				get_rand_double(min, max),
+				get_rand_double(min, max));
+		}
 };
 
 using point3 = vec3;
@@ -92,6 +104,15 @@ inline vec3 cross(const vec3& u, const vec3& v){
 
 inline vec3 normalized(const vec3& v) {
 	return v / v.len();
+}
+
+inline vec3 random_unit_vector() {
+	while(1) {
+		vec3 p = vec3::random(-1, 1);
+		double lensq = p.len_sqr();
+		if(1e-160 <= lensq && lensq <= 1)
+			return p / sqrt(lensq);
+	}
 }
 
 #endif

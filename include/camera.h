@@ -28,11 +28,13 @@ class Camera {
 		
 		uint32_t default_pixel = 0xFFU << 24;
 		
-		double pixel_samples_scale;
+		#ifdef SAMPLING_MODE	
+			double pixel_samples_scale;
+		#endif
 		
 		
 		// get color func
-		color ray_color(const ray& r) const;
+		color ray_color(const ray& r, int bounces) const;
 		
 		ray get_ray(int x, int y) const;
 		
@@ -40,8 +42,10 @@ class Camera {
 	public:
 		uint32_t* display_buffer = NULL;
 		int display_buffer_size;
-		
-		int samples_per_pixel = 10;
+		#ifdef SAMPLING_MODE
+			int samples_per_pixel = 5;
+		#endif
+		int max_bounces = 10;
 		
 		
 		Camera() {}
@@ -63,7 +67,9 @@ class Camera {
 			float ASPECT_RATIO = (1. * WIN_WIDTH)/WIN_HEIGHT;
 			VIEWPORT_WIDTH = ASPECT_RATIO * VIEWPORT_HEIGHT;
 			
-			pixel_samples_scale = 1. / samples_per_pixel;
+			#ifdef SAMPLING_MODE
+				pixel_samples_scale = 1. / samples_per_pixel;
+			#endif
 			
 			display_buffer_size = sizeof(uint32_t) * WIN_SIZE;
 			display_buffer = (uint32_t*) malloc(display_buffer_size);
@@ -99,21 +105,31 @@ class Camera {
 
 ray Camera::get_ray(int x, int y) const {
 	// Ray directed to pixel (x, y)
-	
-	vec3 offset = vec3(get_rand_double()-.5, get_rand_double()-.5, 0);
-	
-	point3 pixel_center = pixel_00
+	#ifdef SAMPLING_MODE
+		vec3 offset = vec3(get_rand_double()-.5, get_rand_double()-.5, 0);
+		
+		point3 pixel_center = pixel_00
 							+ (x + offset.x()) * pixel_delta_h
 							+ (y + offset.y()) * pixel_delta_v;
+	#else
+		point3 pixel_center = pixel_00
+							+ x * pixel_delta_h
+							+ y * pixel_delta_v;
+	#endif
 	
 	return ray(eye_point, pixel_center - eye_point);
 }
 
-color Camera::ray_color(const ray& r) const {
-	hit_record rec;
-	if(world.hit(r, interval::positive, rec))
-		return .5 * (rec.normal + color(1));
+color Camera::ray_color(const ray& r, int bounces_left) const {
+	if (bounces_left <= 0) return color(0);
 	
+	hit_record rec;
+	// Ray bounces off surfaces randomly
+	if(world.hit(r, interval(0.001, inf), rec)){
+		// Lambertian reflectance
+		vec3 rand_dir = rec.normal + random_unit_vector();
+		return .5 * ray_color(ray(rec.p, rand_dir), bounces_left-1);
+	}
 	
 	// BG
 	vec3 dir = normalized(r.direction());
@@ -128,15 +144,19 @@ void Camera::compute_FRAME(void) const {
 	
 	for(int y = 0; y < WIN_HEIGHT; y++) {
 		for(int x = 0; x < WIN_WIDTH; x++){
-			color pixel_color(0);
-			
-			for(int sample = 0; sample < samples_per_pixel; sample++) {
+			#ifdef SAMPLING_MODE
+				color pixel_color(0);
+				for(int sample = 0; sample < samples_per_pixel; sample++) {
+					ray r = get_ray(x, y);
+					pixel_color += ray_color(r, max_bounces);
+				}
+				
+				pixel_color *= pixel_samples_scale;
+			#else
 				ray r = get_ray(x, y);
-				pixel_color += ray_color(r);
-			}
-			
-			pixel_color *= pixel_samples_scale;
-			
+				color pixel_color = ray_color(r, max_bounces);
+			#endif
+				
 			display_buffer[y * WIN_WIDTH + x] |= get_color(pixel_color);
 		}
 	}

@@ -120,10 +120,15 @@ void setup_SCENE(void){
 	
 	scene.add(make_shared<Sphere>(point3(0,0,-1), .5));
 	scene.add(make_shared<Sphere>(point3(10,10,-20), 10));
-	scene.add(make_shared<Sphere>(point3(10,-10,-20), 50));
+	scene.add(make_shared<Sphere>(point3(0,-5.5,-1), 5));
+	// scene.add(make_shared<Sphere>(point3(10,-10,-20), 50));
 	
 	cam = Camera(scene);
 	cam.init_CAMERA(WIDTH, HEIGHT);
+	#ifdef SAMPLING_MODE
+		cam.samples_per_pixel = 10;
+	#endif
+	cam.max_bounces = 50;
 	
 	return;
 }
