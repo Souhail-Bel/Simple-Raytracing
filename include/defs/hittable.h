@@ -9,12 +9,16 @@ using std::make_shared;
 
 #include "utils.h"
 
+class IMaterial;
+
 class hit_record {
 	public:
 		point3 p;
 		vec3 normal;
 		double t;
 		bool is_front;
+		
+		shared_ptr<IMaterial> mat;
 		
 		// 'ext_normal' is assumed normalized
 		void set_face_normal(const ray& r, const vec3& ext_normal) {
