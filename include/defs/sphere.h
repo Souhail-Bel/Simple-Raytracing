@@ -10,9 +10,10 @@ class Sphere : public IHittable {
 	private:
 		point3 center;
 		float radius;
+		shared_ptr<IMaterial> mat;
 	
 	public:
-		Sphere(const point3& c, float r) : center(c), radius(std::fabsf(r)) {}
+		Sphere(const point3& c, float r, shared_ptr<IMaterial> mat) : center(c), radius(std::fabsf(r)), mat(mat) {}
 		
 		bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
 			vec3 OC = center - r.origin();
@@ -42,6 +43,7 @@ class Sphere : public IHittable {
 			rec.t = t;
 			rec.p = r.at(t);
 			rec.set_face_normal(r, (rec.p - center) / radius);
+			rec.mat = mat;
 			
 			return true;
 		}

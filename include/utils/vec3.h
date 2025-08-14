@@ -53,6 +53,11 @@ class vec3 {
 			return std::sqrt(len_sqr());
 		}
 		
+		bool near_null() const {
+			auto eps = 1e-8;
+			return len_sqr() < eps*eps;
+		}
+		
 		static vec3 random() {
 			return vec3(get_rand_double(),
 				get_rand_double(),
@@ -64,6 +69,7 @@ class vec3 {
 				get_rand_double(min, max),
 				get_rand_double(min, max));
 		}
+		
 };
 
 using point3 = vec3;

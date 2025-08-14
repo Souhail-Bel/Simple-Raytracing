@@ -4,6 +4,7 @@
 #include "utils.h"
 
 #include "defs/hittable.h"
+#include "defs/material.h"
 #include "defs/sphere.h"
 
 #endif
