@@ -115,4 +115,9 @@ inline vec3 random_unit_vector() {
 	}
 }
 
+inline vec3 random_unit_hemisphere(const vec3& normal) {
+	vec3 rand_vec = random_unit_vector();
+	return (dot(normal, rand_vec) > 0) ? rand_vec : -rand_vec;
+}
+
 #endif

@@ -127,7 +127,7 @@ color Camera::ray_color(const ray& r, int bounces_left) const {
 	// Ray bounces off surfaces randomly
 	if(world.hit(r, interval(0.001, inf), rec)){
 		// Lambertian reflectance
-		vec3 rand_dir = rec.normal + random_unit_vector();
+		vec3 rand_dir = rec.normal + random_unit_hemisphere(rec.normal);//random_unit_vector();
 		return .5 * ray_color(ray(rec.p, rand_dir), bounces_left-1);
 	}
 	
