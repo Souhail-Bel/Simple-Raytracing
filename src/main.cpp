@@ -17,6 +17,7 @@ int main(int argc, char** argv){
 	init_SDL();
 	
 	setup_SCENE();
+	// getchar();
 	
 	is_running = true;
 	

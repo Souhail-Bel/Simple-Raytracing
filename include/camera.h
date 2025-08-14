@@ -64,9 +64,11 @@ class Camera {
 			pixel_delta_h = viewport_h / WIN_WIDTH;
 			pixel_delta_v = viewport_v / WIN_HEIGHT;
 
+						
 			// Find (0, 0) of the viewport (upper-left)
-			point3 viewport_00 = eye_point - vec3(0, 0, focal_length)
-							- viewport_h/2 - viewport_v/2;
+			vec3 offset_00 = vec3(0, 0, focal_length)
+							+ viewport_h/2 + viewport_v/2;
+			point3 viewport_00 = eye_point - offset_00;
 			pixel_00 = viewport_00 + 0.5 * (pixel_delta_h + pixel_delta_v);
 		}
 		
@@ -75,6 +77,13 @@ class Camera {
 		
 		// compute frame func
 		void compute_FRAME(void) const;
+		
+		void ascend(void) {
+			vec3 deltaU = vec3(0, 0.01, 0);
+			
+			eye_point += deltaU;
+			pixel_00 += deltaU;
+		}
 };
 
 
