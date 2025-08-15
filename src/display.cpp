@@ -123,7 +123,7 @@ void setup_SCENE(void){
 	auto mat_sphsky = make_shared<Metal>(color(.8), .3);
 	auto mat_spher1 = make_shared<Metal>(color(.7, .6, .2), .7);
 	auto mat_spher2 = make_shared<Lambertian>(color(.2, .6, .7));
-	auto mat_spher3 = make_shared<Lambertian>(color(.1, .5, .1));
+	auto mat_spher3 = make_shared<Dielectric>(1./1.33);
 	
 	
 	scene.add(make_shared<Sphere>(point3(0,0,-1),	 .5, mat_center));
@@ -131,7 +131,7 @@ void setup_SCENE(void){
 	scene.add(make_shared<Sphere>(point3(0,-30.5,-1),30, mat_ground));
 	scene.add(make_shared<Sphere>(point3(-10,5,-10),  3, mat_spher1));
 	scene.add(make_shared<Sphere>(point3(-10,5,-2),   5, mat_spher2));
-	scene.add(make_shared<Sphere>(point3(-10,1,-10),   4, mat_spher3));
+	scene.add(make_shared<Sphere>(point3(-10,2,-10),   4, mat_spher3));
 	
 	// scene.add(make_shared<Sphere>(point3(10,-10,-20), 50));
 	

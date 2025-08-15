@@ -130,4 +130,11 @@ inline vec3 reflect(const vec3& v, const vec3& n) {
 	return v - 2*dot(v,n)*n;
 }
 
+inline vec3 refract(const vec3& u, const vec3& n, double relative_refractive_index) {
+	auto cos_theta = std::fmin(dot(-u, n), 1.0);
+	vec3 r_out_perp = relative_refractive_index * (u + cos_theta*n);
+	vec3 r_out_parallel = -std::sqrt(std::fabs(1. - r_out_perp.len_sqr())) * n;
+	return r_out_parallel + r_out_perp;
+}
+
 #endif

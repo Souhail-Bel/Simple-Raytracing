@@ -50,4 +50,28 @@ class Metal : public IMaterial {
 		}
 };
 
+class Dielectric : public IMaterial {
+	private:
+		double refraction_index;
+	public:
+		Dielectric(double refraction_index) : refraction_index(refraction_index) {}
+		
+		bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
+			attenuation = color(1);
+			double rri = rec.is_front ? (1./refraction_index) : refraction_index;
+			
+			vec3 unit_dir = normalized(r_in.direction());
+			
+			double cos_theta = std::fmin(dot(-unit_dir, rec.normal), 1.);
+			double sin_theta = std::sqrt(1. - cos_theta*cos_theta);
+			
+			
+			bool beyond_critical = (rri * sin_theta) > 1.;
+			vec3 dir = beyond_critical ? reflect(unit_dir, rec.normal) : refract(unit_dir, rec.normal, rri);
+			
+			scattered = ray(rec.p, dir);
+			return true;
+		}
+};
+
 #endif
