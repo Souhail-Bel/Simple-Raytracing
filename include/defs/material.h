@@ -1,14 +1,14 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#inlucde "hittable.h"
+#include "hittable.h"
 
 class IMaterial {
 	public:
 		virtual ~IMaterial() = default;
 		
-		virtual bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const {return false;}
-}
+		virtual bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const = 0;
+};
 
 class Lambertian : public IMaterial {
 	private:
@@ -17,7 +17,7 @@ class Lambertian : public IMaterial {
 	public:
 		Lambertian(const color& albedo) : albedo(albedo) {}
 		
-		bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered){
+		bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
 			vec3 scatter_dir = rec.normal + random_unit_hemisphere(rec.normal);
 			
 			// Handle degenerate scatter dirs
@@ -29,6 +29,23 @@ class Lambertian : public IMaterial {
 			
 			return true;
 		}
-}
+};
+
+class Metal : public IMaterial {
+	private:
+		color albedo;
+	
+	public:
+		Metal(const color& albedo) : albedo(albedo) {}
+		
+		bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
+			vec3 reflected = reflect(r_in.direction(), rec.normal);
+			
+			scattered = ray(rec.p, reflected);
+			attenuation = albedo;
+			
+			return true;
+		}
+};
 
 #endif

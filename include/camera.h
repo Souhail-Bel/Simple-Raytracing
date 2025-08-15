@@ -126,9 +126,13 @@ color Camera::ray_color(const ray& r, int bounces_left) const {
 	hit_record rec;
 	// Ray bounces off surfaces randomly
 	if(world.hit(r, interval(0.001, inf), rec)){
-		// Lambertian reflectance
-		vec3 rand_dir = rec.normal + random_unit_hemisphere(rec.normal);//random_unit_vector();
-		return .5 * ray_color(ray(rec.p, rand_dir), bounces_left-1);
+		ray scattered;
+		color attenuation;
+		
+		if(rec.mat -> scatter(r, rec, attenuation, scattered))
+			return attenuation * ray_color(scattered, bounces_left-1);
+		return color(0);
+		// return .5 * ray_color(ray(rec.p, rand_dir), bounces_left-1);
 	}
 	
 	// BG
