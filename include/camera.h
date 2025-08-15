@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include "utils.h"
+#include <memory>
 
 class Camera {
 	private:
@@ -26,7 +27,7 @@ class Camera {
 		
 		point3 pixel_00;
 		
-		uint32_t default_pixel = 0xFFU << 24;
+		constexpr static uint32_t default_pixel = 0xFFU << 24;
 		
 		#ifdef SAMPLING_MODE	
 			double pixel_samples_scale;
