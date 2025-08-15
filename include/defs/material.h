@@ -53,6 +53,14 @@ class Metal : public IMaterial {
 class Dielectric : public IMaterial {
 	private:
 		double refraction_index;
+		
+		// Schlik's approx.
+		static double reflectance(double cosine, double ri) {
+			auto r0 = (1-ri)/(1+ri);
+			r0 = r0*r0;
+			return r0 + (1-r0)*std::pow((1-cosine),5);
+		}
+		
 	public:
 		Dielectric(double refraction_index) : refraction_index(refraction_index) {}
 		
@@ -67,6 +75,8 @@ class Dielectric : public IMaterial {
 			
 			
 			bool beyond_critical = (rri * sin_theta) > 1.;
+			beyond_critical |= reflectance(cos_theta, rri) > get_rand_double();
+			
 			vec3 dir = beyond_critical ? reflect(unit_dir, rec.normal) : refract(unit_dir, rec.normal, rri);
 			
 			scattered = ray(rec.p, dir);
