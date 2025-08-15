@@ -34,17 +34,19 @@ class Lambertian : public IMaterial {
 class Metal : public IMaterial {
 	private:
 		color albedo;
+		double fuzz;
 	
 	public:
-		Metal(const color& albedo) : albedo(albedo) {}
+		Metal(const color& albedo, const double& fuzz) : albedo(albedo), fuzz((fuzz < 1) ? fuzz : 1) {}
 		
 		bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
 			vec3 reflected = reflect(r_in.direction(), rec.normal);
+			reflected = normalized(reflected) + (fuzz * random_unit_vector());
 			
 			scattered = ray(rec.p, reflected);
 			attenuation = albedo;
 			
-			return true;
+			return (dot(scattered.direction(), rec.normal) > 0);
 		}
 };
 
