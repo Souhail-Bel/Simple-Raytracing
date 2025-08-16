@@ -16,7 +16,7 @@ class Camera {
 		float VIEWPORT_HEIGHT = 2.;
 		float VIEWPORT_WIDTH;
 		
-		point3 eye_point = point3(0, 0, 0);
+		vec3 u, v, w;
 		
 		// Distance between viewport and eye point
 		// Set to 1.9248599884 for a very nice FOV
@@ -49,6 +49,10 @@ class Camera {
 		#endif
 		int max_bounces = 10;
 		
+		point3 eye_point = point3(0, 0, 0);
+		point3 foc_point = point3(0, 0, -1);
+		vec3   camera_up = vec3(0, 1, 0);
+		
 		
 		Camera() {}
 		
@@ -72,11 +76,14 @@ class Camera {
 			display_buffer_size = sizeof(uint32_t) * WIN_SIZE;
 			display_buffer.resize(WIN_SIZE);
 			
+			w = normalized(eye_point - foc_point);
+			u = normalized(cross(camera_up, w));
+			v = cross(w, u);
 			
 			// Viewport pixel grid set up
 			// Note how the y-axis is inverted
-			vec3 viewport_h = vec3(VIEWPORT_WIDTH, 0, 0);
-			vec3 viewport_v = vec3(0, -VIEWPORT_HEIGHT, 0);
+			vec3 viewport_h = VIEWPORT_WIDTH * u;
+			vec3 viewport_v = VIEWPORT_HEIGHT * -v;
 
 			// Pixel-to-pixel delta vectors
 			pixel_delta_h = viewport_h / WIN_WIDTH;
@@ -84,7 +91,7 @@ class Camera {
 
 						
 			// Find (0, 0) of the viewport (upper-left)
-			vec3 offset_00 = vec3(0, 0, focal_length)
+			vec3 offset_00 = (focal_length * w)
 							+ viewport_h/2 + viewport_v/2;
 			point3 viewport_00 = eye_point - offset_00;
 			pixel_00 = viewport_00 + 0.5 * (pixel_delta_h + pixel_delta_v);
@@ -93,11 +100,34 @@ class Camera {
 		// compute frame func
 		void compute_FRAME(void);
 		
-		void ascend(void) {
-			vec3 deltaU = vec3(0, 0.01, 0);
+		void refocus(void) {
+			w = normalized(eye_point - foc_point);
+			u = normalized(cross(camera_up, w));
+			v = cross(w, u);
 			
+			// Viewport pixel grid set up
+			// Note how the y-axis is inverted
+			vec3 viewport_h = VIEWPORT_WIDTH * u;
+			vec3 viewport_v = VIEWPORT_HEIGHT * -v;
+
+			// Pixel-to-pixel delta vectors
+			pixel_delta_h = viewport_h / WIN_WIDTH;
+			pixel_delta_v = viewport_v / WIN_HEIGHT;
+
+						
+			// Find (0, 0) of the viewport (upper-left)
+			vec3 offset_00 = (focal_length * w)
+							+ viewport_h/2 + viewport_v/2;
+			point3 viewport_00 = eye_point - offset_00;
+			pixel_00 = viewport_00 + 0.5 * (pixel_delta_h + pixel_delta_v);
+		}
+		
+		void ascend(void) {
+			static vec3 deltaU = vec3(0, 0.01, 0);
+			static vec3 deltaV = vec3(1);
+			
+			camera_up += deltaV;
 			eye_point += deltaU;
-			pixel_00 += deltaU;
 		}
 };
 

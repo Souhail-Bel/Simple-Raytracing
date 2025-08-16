@@ -93,6 +93,7 @@ void update_RENDER(void){
 	
 	cam.compute_FRAME();
 	cam.ascend();
+	cam.refocus();
 	
 	// Optimized approach
 	// using Lock/Unlock texture on GPU
@@ -136,11 +137,17 @@ void setup_SCENE(void){
 	
 	
 	cam = Camera(scene);
+	
+	cam.eye_point = point3(0,0,1);
+	cam.foc_point = point3(0,1,-1);
+	cam.camera_up = vec3(0,1,0);
+	
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE
 		cam.samples_per_pixel = 5;
 	#endif
 	cam.max_bounces = 50;
+	
 	
 	return;
 }
