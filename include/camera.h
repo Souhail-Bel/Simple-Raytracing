@@ -42,7 +42,7 @@ class Camera {
 		
 		
 	public:
-		uint32_t* display_buffer = NULL;
+		std::vector<uint32_t> display_buffer;
 		int display_buffer_size;
 		#ifdef SAMPLING_MODE
 			int samples_per_pixel = 5;
@@ -54,10 +54,6 @@ class Camera {
 		
 		Camera(const hittable_list& scene) : world(scene) {}
 		
-		~Camera(){
-			if(display_buffer)
-				free(display_buffer);
-		}
 		
 		// init function
 		void init_CAMERA(const int WIDTH, const int HEIGHT) {
@@ -74,7 +70,7 @@ class Camera {
 			#endif
 			
 			display_buffer_size = sizeof(uint32_t) * WIN_SIZE;
-			display_buffer = (uint32_t*) malloc(display_buffer_size);
+			display_buffer.resize(WIN_SIZE);
 			
 			
 			// Viewport pixel grid set up
@@ -95,7 +91,7 @@ class Camera {
 		}
 		
 		// compute frame func
-		void compute_FRAME(void) const;
+		void compute_FRAME(void);
 		
 		void ascend(void) {
 			vec3 deltaU = vec3(0, 0.01, 0);
@@ -144,9 +140,9 @@ color Camera::ray_color(const ray& r, int bounces_left) const {
 }
 
 
-void Camera::compute_FRAME(void) const {
+void Camera::compute_FRAME(void) {
 	
-	memset(display_buffer, default_pixel, display_buffer_size);
+	// memset(display_buffer, default_pixel, display_buffer_size);
 	
 	#pragma omp parallel for
 	for(int y = 0; y < WIN_HEIGHT; y++) {
@@ -164,7 +160,7 @@ void Camera::compute_FRAME(void) const {
 				color pixel_color = ray_color(r, max_bounces);
 			#endif
 				
-			display_buffer[y * WIN_WIDTH + x] |= get_color(pixel_color);
+			display_buffer[y * WIN_WIDTH + x] = get_color(pixel_color);
 		}
 	}
 }

@@ -105,7 +105,7 @@ void update_RENDER(void){
 	
 	// Per pixel (32-bit) manipulation
 	// ARGB8888 format	
-	memcpy(texture_pixels, cam.display_buffer, cam.display_buffer_size);
+	memcpy(texture_pixels, cam.display_buffer.data(), cam.display_buffer_size);
 	
 	SDL_UnlockTexture(g_texture);
 	
