@@ -30,13 +30,13 @@ SDL_Event 		g_event;
 bool is_running;
 
 
-
 void init_SDL(void){
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)){
 		perror(SDL_GetError());
 		exit(-1);
 	}
 	
+	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "gpu");
 	
 	g_window = SDL_CreateWindow(
 		"Raytracing",
