@@ -23,7 +23,9 @@ inline double get_rand_double(double min, double max) {
 }
 
 
-const double inf = std::numeric_limits<double>::infinity();
+constexpr double inf = std::numeric_limits<double>::infinity();
+constexpr float PI = 3.1415926535897;
+constexpr float TWO_PI = 2*PI;
 
 #include "utils/vec3.h"
 #include "utils/color.h"

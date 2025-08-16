@@ -22,8 +22,6 @@ extern SDL_Renderer* 	g_renderer;
 extern SDL_Texture*		g_texture; // Frame buffer
 extern SDL_Event 		g_event;
 
-extern bool is_running;
-
 
 void init_SDL(void);
 void close_SDL(void);

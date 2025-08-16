@@ -113,12 +113,10 @@ inline vec3 normalized(const vec3& v) {
 }
 
 inline vec3 random_unit_vector() {
-	while(1) {
-		vec3 p = vec3::random(-1, 1);
-		double lensq = p.len_sqr();
-		if(1e-160 <= lensq && lensq <= 1)
-			return p / sqrt(lensq);
-	}
+	float z = get_rand_double() * 2.0f - 1.0f; // [-1,1]
+    float a = get_rand_double() * 2.0f * TWO_PI; // [0, 2π]
+    float r = sqrtf(1 - z*z);
+    return vec3(r * cosf(a), r * sinf(a), z);
 }
 
 inline vec3 random_unit_hemisphere(const vec3& normal) {

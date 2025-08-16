@@ -9,8 +9,10 @@
 using namespace std;
 using namespace std::chrono;
 
-const int FRAMERATE = 60;
+const int FRAMERATE = 30;
 constexpr int FRAME_DELAY_MS = 1e3/FRAMERATE;
+
+extern bool is_running;
 
 
 int main(int argc, char** argv){

@@ -11,13 +11,12 @@
 using namespace std;
 
 #include "display.h"
-
 #include "camera.h"
+
 
 // Scene parameters
 hittable_list scene;
 Camera cam;
-
 
 // SDL-specific
 // #if is used for region
