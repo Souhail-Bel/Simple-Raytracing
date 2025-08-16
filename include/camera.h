@@ -118,6 +118,7 @@ ray Camera::get_ray(int x, int y) const {
 	return ray(eye_point, pixel_center - eye_point);
 }
 
+
 color Camera::ray_color(const ray& r, int bounces_left) const {
 	if (bounces_left <= 0) return color(0);
 	
@@ -141,8 +142,6 @@ color Camera::ray_color(const ray& r, int bounces_left) const {
 
 
 void Camera::compute_FRAME(void) {
-	
-	// memset(display_buffer, default_pixel, display_buffer_size);
 	
 	#pragma omp parallel for
 	for(int y = 0; y < WIN_HEIGHT; y++) {

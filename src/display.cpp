@@ -139,7 +139,7 @@ void setup_SCENE(void){
 	cam = Camera(scene);
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE
-		cam.samples_per_pixel = 10;
+		cam.samples_per_pixel = 5;
 	#endif
 	cam.max_bounces = 50;
 	

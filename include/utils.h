@@ -5,12 +5,15 @@
 #include <cstdint>
 #include <random>
 
-
+	
 // Get rand double in [0,1[
 inline double get_rand_double(void) {
-	static std::random_device rd;
-	static std::mt19937 gen(rd()); 
-	static std::uniform_real_distribution<> dis(0.0, 1.0); 
+	thread_local static std::mt19937 gen = []{
+        std::random_device rd;
+        return std::mt19937(rd());
+    }();
+
+	thread_local static std::uniform_real_distribution<> dis(0.0, 1.0); 
 	return dis(gen);
 }
 
