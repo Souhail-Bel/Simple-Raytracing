@@ -15,7 +15,8 @@ OBJS 		:= $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(wildcard $(SRC_DIR)/*
 CC 		:= g++
 
 # Flags settings (Compiler and Linker)
-CFLAGS 		:= -Wall -Wextra -pedantic -std=c++11 -I$(INCLUDE_DIR) -fopenmp
+# -O3 is used for aggressive optimization
+CFLAGS 		:= -Wall -Wextra -pedantic -std=c++11 -I$(INCLUDE_DIR) -fopenmp -O3
 LFLAGS 		:= -lSDL2 -lm
 
 ifeq ($(debug), 1)
