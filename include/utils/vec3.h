@@ -11,9 +11,9 @@ class vec3 {
 		// Empty vector with initializer list
 		vec3() : e{0, 0, 0} {}
 		
-		vec3(float u) : e {u, u, u} {}
+		vec3(double u) : e {u, u, u} {}
 		
-		vec3(float x, double y, double z) : e{x, y, z} {}
+		vec3(double x, double y, double z) : e{x, y, z} {}
 		
 		double x() const {return e[0];}
 		double y() const {return e[1];}

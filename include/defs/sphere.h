@@ -20,19 +20,19 @@ class Sphere : public IHittable {
 	
 			// Solves quadratic equation for sphere
 			// b' is used because b is even
-			double a = r.direction().len_sqr();
-			double b_pr = dot(r.direction(), OC);
-			double c = OC.len_sqr() - radius * radius;
+			float a = r.direction().len_sqr();
+			float b_pr = dot(r.direction(), OC);
+			float c = OC.len_sqr() - radius * radius;
 			
-			double del = (b_pr*b_pr - a*c);
+			float del = (b_pr*b_pr - a*c);
 			
 			if(del < 0)
 				return false;
 			
-			double sqrt_del = sqrt(del);
+			float sqrt_del = sqrt(del);
 			
 			// Root within range
-			double t = (b_pr - sqrt_del) / a;
+			float t = (b_pr - sqrt_del) / a;
 			if(!ray_t.has_open(t)) {
 				t = (b_pr + sqrt_del) / a;
 				

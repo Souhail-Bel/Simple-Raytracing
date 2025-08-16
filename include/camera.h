@@ -31,7 +31,7 @@ class Camera {
 		constexpr static uint32_t default_pixel = 0xFFU << 24;
 		
 		#ifdef SAMPLING_MODE	
-			double pixel_samples_scale;
+			float pixel_samples_scale;
 		#endif
 		
 		
