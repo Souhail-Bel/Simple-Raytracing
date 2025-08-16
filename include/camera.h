@@ -3,6 +3,7 @@
 
 #include "utils.h"
 #include <memory>
+#include <omp.h>
 
 class Camera {
 	private:
@@ -147,6 +148,7 @@ void Camera::compute_FRAME(void) const {
 	
 	memset(display_buffer, default_pixel, display_buffer_size);
 	
+	#pragma omp parallel for
 	for(int y = 0; y < WIN_HEIGHT; y++) {
 		for(int x = 0; x < WIN_WIDTH; x++){
 			#ifdef SAMPLING_MODE

@@ -17,7 +17,8 @@ int main(int argc, char** argv){
 	init_SDL();
 	
 	setup_SCENE();
-	// getchar();
+	cout << "Press anything..." << endl;
+	getchar();
 	
 	is_running = true;
 	
