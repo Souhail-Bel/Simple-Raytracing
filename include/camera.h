@@ -21,7 +21,7 @@ class Camera {
 		// Distance between viewport and eye point
 		// Set to 1.9248599884 for a very nice FOV
 		// Currently set at FOV 120°
-		float focal_length = 0.7698003589195;
+		float focal_length;
 		
 		vec3 pixel_delta_h;
 		vec3 pixel_delta_v;
@@ -53,6 +53,8 @@ class Camera {
 		point3 foc_point = point3(0, 0, -1);
 		vec3   camera_up = vec3(0, 1, 0);
 		
+		float FOV = 120; // In degrees
+		
 		
 		Camera() {}
 		
@@ -75,6 +77,8 @@ class Camera {
 			
 			display_buffer_size = sizeof(uint32_t) * WIN_SIZE;
 			display_buffer.resize(WIN_SIZE);
+			
+			focal_length = VIEWPORT_WIDTH/(2*std::tan(degrees_to_radians(FOV)/2));
 			
 			w = normalized(eye_point - foc_point);
 			u = normalized(cross(camera_up, w));

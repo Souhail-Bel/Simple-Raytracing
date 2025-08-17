@@ -142,6 +142,8 @@ void setup_SCENE(void){
 	cam.foc_point = point3(0,1,-1);
 	cam.camera_up = vec3(0,1,0);
 	
+	cam.FOV = 120;
+	
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE
 		cam.samples_per_pixel = 5;

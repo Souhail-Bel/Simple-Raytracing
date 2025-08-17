@@ -27,6 +27,10 @@ constexpr double inf = std::numeric_limits<double>::infinity();
 constexpr float PI = 3.1415926535897;
 constexpr float TWO_PI = 2*PI;
 
+inline double degrees_to_radians(double deg) {
+	return deg * (PI/180);
+}
+
 #include "utils/vec3.h"
 #include "utils/color.h"
 #include "utils/ray.h"
