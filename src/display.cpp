@@ -118,31 +118,74 @@ void update_RENDER(void){
 
 void setup_SCENE(void){
 	
-	auto mat_center = make_shared<Metal>(color(.3), 0);
-	auto mat_ground = make_shared<Lambertian>(color(.5, .2, .9));
-	auto mat_sphsky = make_shared<Metal>(color(.8), .3);
-	auto mat_spher1 = make_shared<Metal>(color(.7, .6, .2), .7);
-	auto mat_spher2 = make_shared<Lambertian>(color(.2, .6, .7));
-	auto mat_spher3 = make_shared<Dielectric>(1./1.33);
-	auto mat_spher4 = make_shared<Dielectric>(2.5);
+	// auto mat_center = make_shared<Metal>(color(.3), 0);
+	// auto mat_ground = make_shared<Lambertian>(color(.5, .2, .9));
+	// auto mat_sphsky = make_shared<Metal>(color(.8), .3);
+	// auto mat_spher1 = make_shared<Metal>(color(.7, .6, .2), .7);
+	// auto mat_spher2 = make_shared<Lambertian>(color(.2, .6, .7));
+	// auto mat_spher3 = make_shared<Dielectric>(1./1.33);
+	// auto mat_spher4 = make_shared<Dielectric>(2.5);
 	
 	
-	scene.add(make_shared<Sphere>(point3(0,0,-.5),	.25, mat_center));
-	scene.add(make_shared<Sphere>(point3(10,10,-20), 10, mat_sphsky));
-	scene.add(make_shared<Sphere>(point3(0,-30.5,-1),30, mat_ground));
-	scene.add(make_shared<Sphere>(point3(-10,5,-10),  3, mat_spher1));
-	scene.add(make_shared<Sphere>(point3(-10,5,-2),   5, mat_spher2));
-	scene.add(make_shared<Sphere>(point3(-10,2,-10),  4, mat_spher3));
-	scene.add(make_shared<Sphere>(point3(5,2,-10),  4, mat_spher4));
+	// scene.add(make_shared<Sphere>(point3(0,0,-.5),	.25, mat_center));
+	// scene.add(make_shared<Sphere>(point3(10,10,-20), 10, mat_sphsky));
+	// scene.add(make_shared<Sphere>(point3(0,-30.5,-1),30, mat_ground));
+	// scene.add(make_shared<Sphere>(point3(-10,5,-10),  3, mat_spher1));
+	// scene.add(make_shared<Sphere>(point3(-10,5,-2),   5, mat_spher2));
+	// scene.add(make_shared<Sphere>(point3(-10,2,-10),  4, mat_spher3));
+	// scene.add(make_shared<Sphere>(point3(5,2,-10),  4, mat_spher4));
+	
+	
+	// Scene from Raytracing in One Weekend
+	
+	auto ground_material = make_shared<Lambertian>(color(0.5, 0.5, 0.5));
+    scene.add(make_shared<Sphere>(point3(0,-1000,0), 1000, ground_material));
+
+    for (int a = -11; a < 11; a++) {
+        for (int b = -11; b < 11; b++) {
+            auto choose_mat = get_rand_double();
+            point3 center(a + 0.9*get_rand_double(), 0.2, b + 0.9*get_rand_double());
+
+            if ((center - point3(4, 0.2, 0)).len() > 0.9) {
+                shared_ptr<IMaterial> sphere_material;
+
+                if (choose_mat < 0.8) {
+                    // diffuse
+                    auto albedo = color::random() * color::random();
+                    sphere_material = make_shared<Lambertian>(albedo);
+                    scene.add(make_shared<Sphere>(center, 0.2, sphere_material));
+                } else if (choose_mat < 0.95) {
+                    // metal
+                    auto albedo = color::random(0.5, 1);
+                    auto fuzz = get_rand_double(0, 0.5);
+                    sphere_material = make_shared<Metal>(albedo, fuzz);
+                    scene.add(make_shared<Sphere>(center, 0.2, sphere_material));
+                } else {
+                    // glass
+                    sphere_material = make_shared<Dielectric>(1.5);
+                    scene.add(make_shared<Sphere>(center, 0.2, sphere_material));
+                }
+            }
+        }
+    }
+
+    auto material1 = make_shared<Dielectric>(1.5);
+    scene.add(make_shared<Sphere>(point3(0, 1, 0), 1.0, material1));
+
+    auto material2 = make_shared<Lambertian>(color(0.4, 0.2, 0.1));
+    scene.add(make_shared<Sphere>(point3(-4, 1, 0), 1.0, material2));
+
+    auto material3 = make_shared<Metal>(color(0.7, 0.6, 0.5), 0.0);
+    scene.add(make_shared<Sphere>(point3(4, 1, 0), 1.0, material3));
 	
 	
 	cam = Camera(scene);
 	
-	cam.eye_point = point3(0,0,1);
-	cam.foc_point = point3(0,1,-1);
+	cam.eye_point = point3(3,2,5);
+	cam.foc_point = point3(0,0,0);
 	cam.camera_up = vec3(0,1,0);
 	
-	cam.FOV = 120;
+	cam.FOV = 100;
 	
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE
