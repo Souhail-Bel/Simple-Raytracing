@@ -11,6 +11,8 @@
 using namespace std;
 
 #include "display.h"
+#include "defs.h"
+#include "bvh.h"
 #include "camera.h"
 
 // Scene parameters

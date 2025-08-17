@@ -9,6 +9,8 @@ class AABB {
 		
 		AABB() {}
 		
+		AABB(const interval& inter) : x_i(inter), y_i(inter), z_i(inter) {}
+		
 		AABB(const interval& x_i, const interval& y_i, const interval& z_i) : x_i(x_i), y_i(y_i), z_i(z_i) {}
 		
 		AABB(const point3& A, const point3& B) {
@@ -60,6 +62,17 @@ class AABB {
 			
 			return true;
 		}
+		
+		int longest_axis() const {
+			if(x_i.size() > y_i.size())
+				return x_i.size() > z_i.size() ? 0 : 2;
+			return y_i.size() > z_i.size() ? 1 : 2;
+		}
+		
+		static const AABB empty, universe;
 };
+
+const AABB AABB::empty    = AABB(interval::empty);
+const AABB AABB::universe = AABB(interval::universe);
 
 #endif

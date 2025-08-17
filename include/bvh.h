@@ -41,7 +41,11 @@ class BVH_node : public IHittable {
 		}
 		
 		BVH_node(std::vector<shared_ptr<IHittable>>& objects, size_t start, size_t end) {
-			int axis = get_rand_int(0, 2);
+			bbox = AABB::empty;
+			for(size_t obj_index = start; obj_index < end; obj_index++)
+				bbox = AABB(bbox, objects[obj_index] -> bounding_box());
+			
+			int axis = bbox.longest_axis();
 			
 			auto comparator = (axis == 0) ? box_x_compare
 					: (axis == 1) ? box_y_compare
@@ -64,7 +68,6 @@ class BVH_node : public IHittable {
 				right = make_shared<BVH_node>(objects, mid, end);
 			}
 			
-			bbox = AABB(left -> bounding_box(), right -> bounding_box());
 		}
 		
 		bool hit(const ray& r, interval ray_t, hit_record& rec) const override {

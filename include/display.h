@@ -7,8 +7,6 @@
 #include <cstdint>
 
 #include "utils.h"
-#include "defs.h"
-#include "bvh.h"
 
 using namespace std;
 
