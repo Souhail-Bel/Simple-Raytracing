@@ -22,11 +22,12 @@ class BVH_node : public IHittable {
 		}
 	
 	public:
-		BVH_node(hittable_list list) : BVH_node(list.objects, 0, list.objects.size()) {
-			
-		}
+		BVH_node(hittable_list list) : BVH_node(list.objects, 0, list.objects.size()) {	}
 		
 		BVH_node(std::vector<shared_ptr<IHittable>>& objects, size_t start, size_t end) {
+			
+			size_t object_span = end - start;
+			
 			bbox = AABB::empty;
 			#pragma omp parallel for
 			for(size_t obj_index = start; obj_index < end; obj_index++)
@@ -37,8 +38,6 @@ class BVH_node : public IHittable {
 			auto comparator = [axis](const shared_ptr<IHittable>& a, const shared_ptr<IHittable>& b) {
 				return box_compare(a, b, axis);
 			};
-			
-			size_t object_span = end - start;
 			
 			if(object_span == 1) {
 				left = right = objects[start];
