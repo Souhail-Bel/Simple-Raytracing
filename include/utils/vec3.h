@@ -113,8 +113,8 @@ inline vec3 normalized(const vec3& v) {
 }
 
 inline vec3 random_unit_vector() {
-	float z = get_rand_double() * 2.0f - 1.0f; // [-1,1]
-    float a = get_rand_double() * 2.0f * TWO_PI; // [0, 2π]
+	float z = get_rand_double(-1, 1);
+    float a = get_rand_double(0, TWO_PI);
     float r = sqrtf(1 - z*z);
     return vec3(r * cosf(a), r * sinf(a), z);
 }
@@ -122,6 +122,12 @@ inline vec3 random_unit_vector() {
 inline vec3 random_unit_hemisphere(const vec3& normal) {
 	vec3 rand_vec = random_unit_vector();
 	return (dot(normal, rand_vec) > 0) ? rand_vec : -rand_vec;
+}
+
+inline vec3 random_unit_disk() {
+	float r = get_rand_double(-1, 1);
+	float a = get_rand_double(0, TWO_PI);
+	return vec3(r * cosf(a), r * sinf(a), 0);
 }
 
 inline vec3 reflect(const vec3& v, const vec3& n) {

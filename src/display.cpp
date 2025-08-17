@@ -92,8 +92,8 @@ void handle_INPUT(void){
 void update_RENDER(void){
 	
 	cam.compute_FRAME();
-	cam.ascend();
-	cam.refocus();
+	// cam.ascend();
+	// cam.refocus();
 	
 	// Optimized approach
 	// using Lock/Unlock texture on GPU
