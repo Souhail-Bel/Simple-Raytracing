@@ -11,13 +11,24 @@ class Sphere : public IHittable {
 		ray center;
 		float radius;
 		shared_ptr<IMaterial> mat;
+		AABB bbox;
 	
 	public:
 		// Static sphere
-		Sphere(const point3& c, float r, shared_ptr<IMaterial> mat) : center(c, vec3(0)), radius(std::fabsf(r)), mat(mat) {}
+		Sphere(const point3& c, float r, shared_ptr<IMaterial> mat) : center(c, vec3(0)), radius(std::fabsf(r)), mat(mat) {
+			vec3 r_vec = vec3(radius);
+			bbox = AABB(c - r_vec, c + r_vec);
+		}
 		
 		// Moving sphere
-		Sphere(const point3& c1, const point3& c2, float r, shared_ptr<IMaterial> mat) : center(c1, c2 - c1), radius(std::fabsf(r)), mat(mat) {}
+		Sphere(const point3& c1, const point3& c2, float r, shared_ptr<IMaterial> mat) : center(c1, c2 - c1), radius(std::fabsf(r)), mat(mat) {
+			vec3 r_vec = vec3(radius);
+			AABB box_0(center.at(0) - r_vec, center.at(0) + r_vec);
+			AABB box_1(center.at(1) - r_vec, center.at(1) + r_vec);
+			bbox = AABB(box_0, box_1);
+		}
+		
+		AABB bounding_box() const override {return bbox;}
 		
 		bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
 			point3 curr_center = center.at(r.time());

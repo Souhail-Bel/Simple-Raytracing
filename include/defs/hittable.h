@@ -8,6 +8,7 @@ using std::shared_ptr;
 using std::make_shared;
 
 #include "utils.h"
+#include "aabb.h"
 
 class IMaterial;
 
@@ -32,12 +33,16 @@ class IHittable {
 		virtual ~IHittable() = default;
 		
 		virtual bool hit(const ray& r, interval ray_t, hit_record& rec) const = 0;
+		
+		virtual AABB bounding_box() const = 0;
 };
 
 
 // Shared pointers allow multiple geometries to share a common instance (i.e. multiple spheres, same material)
 
 class hittable_list : public IHittable {
+	private:
+		AABB bbox;
 	public:
 		std::vector<shared_ptr<IHittable>> objects;
 		
@@ -48,7 +53,10 @@ class hittable_list : public IHittable {
 		
 		void add(shared_ptr<IHittable> obj){
 			objects.push_back(obj);
+			bbox = AABB(bbox, obj -> bounding_box());
 		}
+		
+		AABB bounding_box() const override {return bbox;}
 		
 		bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
 			

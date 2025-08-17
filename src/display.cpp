@@ -13,7 +13,6 @@ using namespace std;
 #include "display.h"
 #include "camera.h"
 
-
 // Scene parameters
 hittable_list scene;
 Camera cam;
@@ -150,19 +149,19 @@ void setup_SCENE(void){
                 shared_ptr<IMaterial> sphere_material;
 
                 if (choose_mat < 0.8) {
-                    // diffuse
+                    // Diffuse
                     auto albedo = color::random() * color::random();
                     sphere_material = make_shared<Lambertian>(albedo);
 					auto center2 = center + vec3(0,get_rand_double(0, 1),0);
                     scene.add(make_shared<Sphere>(center, center2, 0.2, sphere_material));
                 } else if (choose_mat < 0.95) {
-                    // metal
+                    // Metal
                     auto albedo = color::random(0.5, 1);
                     auto fuzz = get_rand_double(0, 0.5);
                     sphere_material = make_shared<Metal>(albedo, fuzz);
                     scene.add(make_shared<Sphere>(center, 0.2, sphere_material));
                 } else {
-                    // glass
+                    // Glass
                     sphere_material = make_shared<Dielectric>(1.5);
                     scene.add(make_shared<Sphere>(center, 0.2, sphere_material));
                 }
@@ -180,6 +179,8 @@ void setup_SCENE(void){
     scene.add(make_shared<Sphere>(point3(4, 1, 0), 1.0, material3));
 	
 	
+	scene = hittable_list(make_shared<BVH_node>(scene));
+	
 	cam = Camera(scene);
 	
 	cam.eye_point = point3(3,2,5);
@@ -190,7 +191,7 @@ void setup_SCENE(void){
 	
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE
-		cam.samples_per_pixel = 5;
+		cam.samples_per_pixel = 10;
 	#endif
 	cam.max_bounces = 50;
 	

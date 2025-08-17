@@ -6,7 +6,7 @@
 #include <random>
 
 	
-// Get rand double in [0,1[
+// Get random double in [0,1[
 inline double get_rand_double(void) {
 	thread_local static std::mt19937 gen = []{
         std::random_device rd;
@@ -17,9 +17,14 @@ inline double get_rand_double(void) {
 	return dis(gen);
 }
 
-// Get rand double in [min,max[
+// Get random double in [min,max[
 inline double get_rand_double(double min, double max) {
 	return min + (max - min)*get_rand_double();
+}
+
+// Get random int in [min, max];
+inline int get_rand_int(int min, int max) {
+	return int(get_rand_double(min, max+1));
 }
 
 
