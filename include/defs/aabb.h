@@ -14,15 +14,9 @@ class AABB {
 		AABB(const interval& x_i, const interval& y_i, const interval& z_i) : x_i(x_i), y_i(y_i), z_i(z_i) {}
 		
 		AABB(const point3& A, const point3& B) {
-			x_i = (A[0] <= B[0]) ?
-				interval(A[0], B[0]):
-				interval(B[0], A[0]);
-			y_i = (A[1] <= B[1]) ?
-				interval(A[1], B[1]):
-				interval(B[1], A[1]);
-			z_i = (A[2] <= B[2]) ?
-				interval(A[2], B[2]):
-				interval(B[2], A[2]);
+			x_i = interval(std::min(A[0], B[0]), std::max(A[0], B[0]));
+			y_i = interval(std::min(A[1], B[1]), std::max(A[1], B[1]));
+			z_i = interval(std::min(A[2], B[2]), std::max(A[2], B[2]));
 		}
 		
 		AABB(const AABB& box_0, const AABB& box_1) {
@@ -32,9 +26,11 @@ class AABB {
 		}
 		
 		const interval& axis_interval(int n) const {
-			if(n == 0) return x_i;
-			if(n == 1) return y_i;
-			return z_i;
+			switch(n) {
+				case 0:  return x_i;
+				case 1:  return y_i;
+				default: return z_i;
+			}
 		}
 		
 		bool hit(const ray& r, interval ray_t) const {
@@ -47,14 +43,12 @@ class AABB {
 
 				auto t0 = (ax.min - ray_orig[axis]) * adinv;
 				auto t1 = (ax.max - ray_orig[axis]) * adinv;
-
-				if (t0 < t1) {
-					if (t0 > ray_t.min) ray_t.min = t0;
-					if (t1 < ray_t.max) ray_t.max = t1;
-				} else {
-					if (t1 > ray_t.min) ray_t.min = t1;
-					if (t0 < ray_t.max) ray_t.max = t0;
-				}
+				
+				if(adinv < 0)
+					std::swap(t0, t1);
+				
+				ray_t.min = std::max(t0, ray_t.min);
+				ray_t.max = std::min(t1, ray_t.max);
 
 				if (ray_t.max <= ray_t.min)
 					return false;
