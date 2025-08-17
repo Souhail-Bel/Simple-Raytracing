@@ -4,6 +4,7 @@
 #include "defs.h"
 
 #include <algorithm>
+#include <omp.h>
 
 class BVH_node : public IHittable {
 	private:
@@ -42,6 +43,7 @@ class BVH_node : public IHittable {
 		
 		BVH_node(std::vector<shared_ptr<IHittable>>& objects, size_t start, size_t end) {
 			bbox = AABB::empty;
+			#pragma omp parallel for
 			for(size_t obj_index = start; obj_index < end; obj_index++)
 				bbox = AABB(bbox, objects[obj_index] -> bounding_box());
 			
