@@ -24,7 +24,7 @@ class Lambertian : public IMaterial {
 			if(scatter_dir.near_null())
 				scatter_dir = rec.normal;
 			
-			scattered = ray(rec.p, scatter_dir);
+			scattered = ray(rec.p, scatter_dir, r_in.time());
 			attenuation = albedo;
 			
 			return true;
@@ -43,7 +43,7 @@ class Metal : public IMaterial {
 			vec3 reflected = reflect(r_in.direction(), rec.normal);
 			reflected = normalized(reflected) + (fuzz * random_unit_vector());
 			
-			scattered = ray(rec.p, reflected);
+			scattered = ray(rec.p, reflected, r_in.time());
 			attenuation = albedo;
 			
 			return (dot(scattered.direction(), rec.normal) > 0);
@@ -79,7 +79,7 @@ class Dielectric : public IMaterial {
 			
 			vec3 dir = beyond_critical ? reflect(unit_dir, rec.normal) : refract(unit_dir, rec.normal, rri);
 			
-			scattered = ray(rec.p, dir);
+			scattered = ray(rec.p, dir, r_in.time());
 			return true;
 		}
 };

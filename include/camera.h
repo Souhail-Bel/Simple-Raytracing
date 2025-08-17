@@ -149,7 +149,9 @@ ray Camera::get_ray(int x, int y) const {
 							+ y * pixel_delta_v;
 	#endif
 	
-	return ray(eye_point, pixel_center - eye_point);
+	return ray(eye_point,					// Origin
+				pixel_center - eye_point,	// Direction
+				get_rand_double());			// Time
 }
 
 

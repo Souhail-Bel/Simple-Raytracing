@@ -8,15 +8,21 @@
 
 class Sphere : public IHittable {
 	private:
-		point3 center;
+		ray center;
 		float radius;
 		shared_ptr<IMaterial> mat;
 	
 	public:
-		Sphere(const point3& c, float r, shared_ptr<IMaterial> mat) : center(c), radius(std::fabsf(r)), mat(mat) {}
+		// Static sphere
+		Sphere(const point3& c, float r, shared_ptr<IMaterial> mat) : center(c, vec3(0)), radius(std::fabsf(r)), mat(mat) {}
+		
+		// Moving sphere
+		Sphere(const point3& c1, const point3& c2, float r, shared_ptr<IMaterial> mat) : center(c1, c2 - c1), radius(std::fabsf(r)), mat(mat) {}
 		
 		bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
-			vec3 OC = center - r.origin();
+			point3 curr_center = center.at(r.time());
+			
+			vec3 OC = curr_center - r.origin();
 	
 			// Solves quadratic equation for sphere
 			// b' is used because b is even
@@ -42,7 +48,7 @@ class Sphere : public IHittable {
 			
 			rec.t = t;
 			rec.p = r.at(t);
-			rec.set_face_normal(r, (rec.p - center) / radius);
+			rec.set_face_normal(r, (rec.p - curr_center) / radius);
 			rec.mat = mat;
 			
 			return true;

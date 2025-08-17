@@ -141,8 +141,8 @@ void setup_SCENE(void){
 	auto ground_material = make_shared<Lambertian>(color(0.5, 0.5, 0.5));
     scene.add(make_shared<Sphere>(point3(0,-1000,0), 1000, ground_material));
 
-    for (int a = -11; a < 11; a++) {
-        for (int b = -11; b < 11; b++) {
+    for (int a = -5; a < 5; a++) {
+        for (int b = -5; b < 5; b++) {
             auto choose_mat = get_rand_double();
             point3 center(a + 0.9*get_rand_double(), 0.2, b + 0.9*get_rand_double());
 
@@ -153,7 +153,8 @@ void setup_SCENE(void){
                     // diffuse
                     auto albedo = color::random() * color::random();
                     sphere_material = make_shared<Lambertian>(albedo);
-                    scene.add(make_shared<Sphere>(center, 0.2, sphere_material));
+					auto center2 = center + vec3(0,get_rand_double(0, 1),0);
+                    scene.add(make_shared<Sphere>(center, center2, 0.2, sphere_material));
                 } else if (choose_mat < 0.95) {
                     // metal
                     auto albedo = color::random(0.5, 1);
