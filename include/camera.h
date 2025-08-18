@@ -175,10 +175,9 @@ color Camera::ray_color(const ray& r, int bounces_left) const {
 	float a = 0.5*(dir.y() + 1.);
 	color bg = (1-a) * color(1) + a * color(.4, .6, 1);
 	#ifdef SAMPLING_MODE
-		return .5*bg;
-	#else
-		return bg;
+		bg = .5*bg;
 	#endif
+	return bg;
 }
 
 
