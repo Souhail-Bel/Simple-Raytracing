@@ -12,10 +12,12 @@ class IMaterial {
 
 class Lambertian : public IMaterial {
 	private:
-		color albedo;
+		shared_ptr<ITexture> tex;
 		
 	public:
-		Lambertian(const color& albedo) : albedo(albedo) {}
+		Lambertian(const color& albedo) : tex(make_shared<Uniform_Color>(albedo)) {}
+		
+		Lambertian(shared_ptr<ITexture> tex) : tex(tex) {}
 		
 		bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
 			vec3 scatter_dir = rec.normal + random_unit_hemisphere(rec.normal);
@@ -25,7 +27,7 @@ class Lambertian : public IMaterial {
 				scatter_dir = rec.normal;
 			
 			scattered = ray(rec.p, scatter_dir, r_in.time());
-			attenuation = albedo;
+			attenuation = tex->value(rec.u, rec.v, rec.p);
 			
 			return true;
 		}

@@ -119,8 +119,10 @@ void update_RENDER(void){
 
 void scene_origScene(void) {
 	
+	auto checker = make_shared<Checker_Texture>(.3, color(.1), color(.9));
+	
 	auto mat_center = make_shared<Metal>(color(.3), 0);
-	auto mat_ground = make_shared<Lambertian>(color(.5, .2, .9));
+	auto mat_ground = make_shared<Lambertian>(checker);
 	auto mat_sphsky = make_shared<Metal>(color(.8), .3);
 	auto mat_spher1 = make_shared<Metal>(color(.7, .6, .2), .7);
 	auto mat_spher2 = make_shared<Lambertian>(color(.2, .6, .7));
