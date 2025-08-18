@@ -204,11 +204,15 @@ void scene_earthScene(void) {
 	auto mat_metal = make_shared<Metal>(color(.7, .6, .2), .7);
 	auto metal_ball = make_shared<Sphere>(point3(-20, 3,-7),  4, mat_metal);
 	
+	auto mat_light = make_shared<Emitter>(color(1));
+	auto light_ball = make_shared<Sphere>(point3(3,2,-2), 2, mat_light);
+	
 	scene.add(globe);
 	scene.add(ground);
 	scene.add(glass);
 	scene.add(marble);
 	scene.add(metal_ball);
+	scene.add(light_ball);
 }
 
 void setup_SCENE(void){

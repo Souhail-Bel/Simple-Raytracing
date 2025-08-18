@@ -9,7 +9,7 @@ class IMaterial {
 		
 		virtual color emitted(double u, double v, const point3& p) const {return color(0);}
 		
-		virtual bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const = 0;
+		virtual bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const {return 0;};
 };
 
 class Lambertian : public IMaterial {
@@ -88,12 +88,14 @@ class Dielectric : public IMaterial {
 		}
 };
 
-class Emit : public IMaterial {
+class Emitter : public IMaterial {
 	private:
 		shared_ptr<ITexture> tex;
+		
 	public:
-		Emit(shared_ptr<ITexture> tex) : tex(tex) {}
-		Emit(const color& emit) : tex(make_shared<Uniform_Color>(emit)) {}
+		Emitter(shared_ptr<ITexture> tex) : tex(tex) {}
+		
+		Emitter(const color& emit) : tex(make_shared<Uniform_Color>(emit)) {}
 		
 		color emitted(double u, double v, const point3& p) const override {
 			return tex -> value(u, v, p);
