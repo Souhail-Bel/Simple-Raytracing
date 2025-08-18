@@ -204,8 +204,8 @@ void scene_earthScene(void) {
 	auto mat_metal = make_shared<Metal>(color(.7, .6, .2), .7);
 	auto metal_ball = make_shared<Sphere>(point3(-20, 3,-7),  4, mat_metal);
 	
-	auto mat_light = make_shared<Emitter>(color(1000));
-	auto light_ball = make_shared<Sphere>(point3(-15,2,-2), 10, mat_light);
+	auto mat_light = make_shared<Emitter>(color(10));
+	auto light_ball = make_shared<Sphere>(point3(3,1,0), .5, mat_light);
 	
 	scene.add(globe);
 	scene.add(ground);
@@ -229,7 +229,7 @@ void setup_SCENE(void){
 	
 	cam.FOV = 100;
 	
-	cam.background = color(.6, .7, 1);
+	cam.background = color(.1, 0.08, 0.07);
 	
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE

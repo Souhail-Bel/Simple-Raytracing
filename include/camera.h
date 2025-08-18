@@ -173,7 +173,7 @@ color Camera::ray_color(const ray& r, int bounces_left) const {
 	if(!rec.mat->scatter(r, rec, attenuation, scattered))
 		return emit;
 	
-	color scatter = attenuation * ray_color(r, bounces_left-1);
+	color scatter = attenuation * ray_color(scattered, bounces_left-1);
 	
 	return emit + scatter;
 }
