@@ -16,7 +16,7 @@ CC 		:= g++
 
 # Flags settings (Compiler and Linker)
 # -O3 is used for aggressive optimization
-CFLAGS 		:= -Wall -Wextra -pedantic -std=c++11 -I$(INCLUDE_DIR) -fopenmp
+CFLAGS 		:= -Wall -Wextra -pedantic -std=c++11 -I$(INCLUDE_DIR) -fopenmp -Wno-unused-parameter
 CFLAGS		:= $(CFLAGS) -O3 -ffast-math -fipa-pure-const -freciprocal-math -mtune=native -fivopts
 LFLAGS 		:= -lSDL2 -lm
 
