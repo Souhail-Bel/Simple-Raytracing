@@ -186,9 +186,17 @@ void scene_bookScene(void) {
 	
 }
 
+void scene_earthScene(void) {
+    auto earth_texture = make_shared<IMG_Texture>("1024px-Nasa_land_ocean_ice_8192.jpg");
+    auto earth_surface = make_shared<Lambertian>(earth_texture);
+    auto globe = make_shared<Sphere>(point3(0,0,0), 2, earth_surface);
+	
+	scene.add(globe);
+}
+
 void setup_SCENE(void){
 	
-	scene_origScene();
+	scene_earthScene();
 	
 	scene = hittable_list(make_shared<BVH_node>(scene));
 	

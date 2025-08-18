@@ -41,4 +41,5 @@ inline double degrees_to_radians(double deg) {
 #include "utils/ray.h"
 #include "utils/interval.h"
 
+
 #endif

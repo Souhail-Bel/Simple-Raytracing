@@ -31,3 +31,4 @@ uint32_t get_color(const color& pixel_color){
 const interval interval::empty = interval();
 const interval interval::universe = interval(-inf, +inf);
 const interval interval::positive = interval(0.001, +inf);
+const interval interval::unit = interval(0, 1);

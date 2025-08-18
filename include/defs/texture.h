@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include "utils.h"
+#include "utils/img.h"
 
 class ITexture {
 	public:
@@ -40,6 +41,30 @@ class Checker_Texture : public ITexture {
 			auto zInt = int(std::floor(inv_scale * p.z()));
 			
 			return ((xInt + yInt + zInt) % 2) ? odd->value(u, v, p) : even->value(u, v, p);
+		}
+};
+
+class IMG_Texture : public ITexture {
+	private:
+		IMG image;
+	
+	public:
+		IMG_Texture(const char* filename) : image(filename) {}
+		
+		color value(double u, double v, const point3& p) const override {
+			if(image.height() <= 0) return color(1, 0, 1);
+			
+			u = interval::unit.clamp(u);
+			v = 1. - interval::unit.clamp(v);
+			
+			auto i = int(u*image.width());
+			auto j = int(v*image.height());
+			auto pixel = image.pixel_data(i, j);
+			
+			auto color_scale = 1. / 255;
+			
+			return color_scale * color(pixel[0], pixel[1], pixel[2]);
+			
 		}
 };
 

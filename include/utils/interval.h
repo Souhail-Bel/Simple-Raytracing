@@ -37,7 +37,7 @@ class interval {
 			return interval(min - delta/2, max + delta/2);
 		}
 		
-		static const interval empty, universe, positive;
+		static const interval empty, universe, positive, unit;
 };
 
 #endif

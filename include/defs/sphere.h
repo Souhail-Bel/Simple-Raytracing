@@ -12,6 +12,18 @@ class Sphere : public IHittable {
 		float radius;
 		shared_ptr<IMaterial> mat;
 		AABB bbox;
+		
+		static void get_uv(const point3& p, double& u, double& v) {
+			// u and v go from 0 to 1
+			// u angle around Y axis from -X
+			// v angle from -Y to +Y
+			
+			auto theta = std::acos(-p.y());
+			auto phi   = std::atan2(-p.z(), p.x()) + PI;
+			
+			u = phi / TWO_PI;
+			v = theta / PI;
+		}
 	
 	public:
 		// Static sphere
@@ -59,7 +71,9 @@ class Sphere : public IHittable {
 			
 			rec.t = t;
 			rec.p = r.at(t);
-			rec.set_face_normal(r, (rec.p - curr_center) / radius);
+			vec3 out_normal = (rec.p - curr_center) / radius;
+			rec.set_face_normal(r, out_normal);
+			get_uv(out_normal, rec.u, rec.v);
 			rec.mat = mat;
 			
 			return true;
