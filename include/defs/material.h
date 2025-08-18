@@ -7,6 +7,8 @@ class IMaterial {
 	public:
 		virtual ~IMaterial() = default;
 		
+		virtual color emitted(double u, double v, const point3& p) const {return color(0);}
+		
 		virtual bool scatter (const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const = 0;
 };
 
@@ -83,6 +85,18 @@ class Dielectric : public IMaterial {
 			
 			scattered = ray(rec.p, dir, r_in.time());
 			return true;
+		}
+};
+
+class Emit : public IMaterial {
+	private:
+		shared_ptr<ITexture> tex;
+	public:
+		Emit(shared_ptr<ITexture> tex) : tex(tex) {}
+		Emit(const color& emit) : tex(make_shared<Uniform_Color>(emit)) {}
+		
+		color emitted(double u, double v, const point3& p) const override {
+			return tex -> value(u, v, p);
 		}
 };
 

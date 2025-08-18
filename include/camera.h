@@ -55,6 +55,7 @@ class Camera {
 		
 		float FOV = 120; // In degrees
 		
+		color background;
 		
 		Camera() {}
 		
@@ -159,25 +160,22 @@ color Camera::ray_color(const ray& r, int bounces_left) const {
 	if (bounces_left <= 0) return color(0);
 	
 	hit_record rec;
-	// Ray bounces off surfaces randomly
-	if(world.hit(r, interval(0.001, inf), rec)){
-		ray scattered;
-		color attenuation;
-		
-		if(rec.mat -> scatter(r, rec, attenuation, scattered))
-			return attenuation * ray_color(scattered, bounces_left-1);
-		return color(0);
-		// return .5 * ray_color(ray(rec.p, rand_dir), bounces_left-1);
-	}
 	
-	// BG
-	vec3 dir = normalized(r.direction());
-	float a = 0.5*(dir.y() + 1.);
-	color bg = (1-a) * color(1) + a * color(.4, .6, 1);
-	#ifdef SAMPLING_MODE
-		bg = .5*bg;
-	#endif
-	return bg;
+	// No hits just yields the bg
+	if(!world.hit(r, interval::positive, rec))
+		return background;
+	
+	ray scattered;
+	color attenuation;
+	color emit = rec.mat->emitted(rec.u, rec.v, rec.p);
+	
+	// No scatter is just up to emission
+	if(!rec.mat->scatter(r, rec, attenuation, scattered))
+		return emit;
+	
+	color scatter = attenuation * ray_color(r, bounces_left-1);
+	
+	return emit + scatter;
 }
 
 

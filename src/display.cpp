@@ -93,8 +93,8 @@ void handle_INPUT(void){
 void update_RENDER(void){
 	
 	cam.compute_FRAME();
-	cam.ascend();
-	cam.refocus();
+	// cam.ascend();
+	// cam.refocus();
 	
 	// Optimized approach
 	// using Lock/Unlock texture on GPU
@@ -224,6 +224,8 @@ void setup_SCENE(void){
 	cam.camera_up = vec3(0,1,0);
 	
 	cam.FOV = 100;
+	
+	cam.background = color(.6, .7, 1);
 	
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE
