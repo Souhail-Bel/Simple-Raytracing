@@ -19,6 +19,10 @@ class hit_record {
 		double t;
 		bool is_front;
 		
+		// UV surface coords
+		double u;
+		double v;
+		
 		shared_ptr<IMaterial> mat;
 		
 		// 'ext_normal' is assumed normalized

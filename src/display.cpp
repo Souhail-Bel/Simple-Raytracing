@@ -117,26 +117,27 @@ void update_RENDER(void){
 }
 #endif
 
-void setup_SCENE(void){
+void scene_origScene(void) {
 	
-	// auto mat_center = make_shared<Metal>(color(.3), 0);
-	// auto mat_ground = make_shared<Lambertian>(color(.5, .2, .9));
-	// auto mat_sphsky = make_shared<Metal>(color(.8), .3);
-	// auto mat_spher1 = make_shared<Metal>(color(.7, .6, .2), .7);
-	// auto mat_spher2 = make_shared<Lambertian>(color(.2, .6, .7));
-	// auto mat_spher3 = make_shared<Dielectric>(1./1.33);
-	// auto mat_spher4 = make_shared<Dielectric>(2.5);
-	
-	
-	// scene.add(make_shared<Sphere>(point3(0,0,-.5),	.25, mat_center));
-	// scene.add(make_shared<Sphere>(point3(10,10,-20), 10, mat_sphsky));
-	// scene.add(make_shared<Sphere>(point3(0,-30.5,-1),30, mat_ground));
-	// scene.add(make_shared<Sphere>(point3(-10,5,-10),  3, mat_spher1));
-	// scene.add(make_shared<Sphere>(point3(-10,5,-2),   5, mat_spher2));
-	// scene.add(make_shared<Sphere>(point3(-10,2,-10),  4, mat_spher3));
-	// scene.add(make_shared<Sphere>(point3(5,2,-10),  4, mat_spher4));
+	auto mat_center = make_shared<Metal>(color(.3), 0);
+	auto mat_ground = make_shared<Lambertian>(color(.5, .2, .9));
+	auto mat_sphsky = make_shared<Metal>(color(.8), .3);
+	auto mat_spher1 = make_shared<Metal>(color(.7, .6, .2), .7);
+	auto mat_spher2 = make_shared<Lambertian>(color(.2, .6, .7));
+	auto mat_spher3 = make_shared<Dielectric>(1./1.33);
+	auto mat_spher4 = make_shared<Dielectric>(2.5);
 	
 	
+	scene.add(make_shared<Sphere>(point3(0,0,-.5),	.25, mat_center));
+	scene.add(make_shared<Sphere>(point3(10,10,-20), 10, mat_sphsky));
+	scene.add(make_shared<Sphere>(point3(0,-30.5,-1),30, mat_ground));
+	scene.add(make_shared<Sphere>(point3(-10,5,-10),  3, mat_spher1));
+	scene.add(make_shared<Sphere>(point3(-10,5,-2), point3(-10,2,-2), 5, mat_spher2));
+	scene.add(make_shared<Sphere>(point3(-10,2,-10),  4, mat_spher3));
+	scene.add(make_shared<Sphere>(point3(5,2,-10),    4, mat_spher4));
+}
+
+void scene_bookScene(void) {
 	// Scene from Raytracing in One Weekend
 	
 	auto ground_material = make_shared<Lambertian>(color(0.5, 0.5, 0.5));
@@ -180,6 +181,12 @@ void setup_SCENE(void){
     auto material3 = make_shared<Metal>(color(0.7, 0.6, 0.5), 0.0);
     scene.add(make_shared<Sphere>(point3(4, 1, 0), 1.0, material3));
 	
+	
+}
+
+void setup_SCENE(void){
+	
+	scene_origScene();
 	
 	scene = hittable_list(make_shared<BVH_node>(scene));
 	
