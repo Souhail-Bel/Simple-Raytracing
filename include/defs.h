@@ -5,6 +5,7 @@
 
 #include "defs/aabb.h"
 #include "defs/hittable.h"
+#include "defs/texture.h"
 #include "defs/material.h"
 #include "defs/sphere.h"
 
