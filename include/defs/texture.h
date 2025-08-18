@@ -29,7 +29,7 @@ class Checker_Texture : public ITexture {
 		shared_ptr<ITexture> odd;
 	
 	public:
-		Checker_Texture(double scale, shared_ptr<ITexture> even, shared_ptr<ITexture>) : inv_scale(1./scale), even(even), odd(odd) {}
+		Checker_Texture(double scale, shared_ptr<ITexture> even, shared_ptr<ITexture> odd) : inv_scale(1./scale), even(even), odd(odd) {}
 		
 		Checker_Texture(double scale, const color& c0, const color& c1) : inv_scale(1./scale), even(make_shared<Uniform_Color>(c0)), odd(make_shared<Uniform_Color>(c1)) {}
 		

@@ -123,7 +123,7 @@ void scene_origScene(void) {
 	
 	auto mat_center = make_shared<Metal>(color(.3), 0);
 	auto mat_ground = make_shared<Lambertian>(checker);
-	auto mat_sphsky = make_shared<Metal>(color(.8), .3);
+	auto mat_sphsky = make_shared<Metal>(color(.9, .3, .3), .3);
 	auto mat_spher1 = make_shared<Metal>(color(.7, .6, .2), .7);
 	auto mat_spher2 = make_shared<Lambertian>(color(.2, .6, .7));
 	auto mat_spher3 = make_shared<Dielectric>(1./1.33);
