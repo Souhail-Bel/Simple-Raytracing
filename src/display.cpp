@@ -189,9 +189,26 @@ void scene_bookScene(void) {
 void scene_earthScene(void) {
     auto earth_texture = make_shared<IMG_Texture>("1024px-Nasa_land_ocean_ice_8192.jpg");
     auto earth_surface = make_shared<Lambertian>(earth_texture);
-    auto globe = make_shared<Sphere>(point3(0,0,0), 2, earth_surface);
+    auto globe = make_shared<Sphere>(point3(0,2,0), 2, earth_surface);
+	
+	auto checker = make_shared<Checker_Texture>(.3, color(.1), color(.9));
+	auto mat_ground = make_shared<Lambertian>(checker);
+	auto ground = make_shared<Sphere>(point3(0,-30.5,-1),30, mat_ground);
+	
+	auto mat_sphsky = make_shared<Dielectric>(2.5);
+	auto glass = make_shared<Sphere>(point3(5,5,-20), 10, mat_sphsky);
+	
+	auto mat_marble = make_shared<Lambertian>(color(.2, .6, .7));
+	auto marble = make_shared<Sphere>(point3(-15, 5, -10), 5, mat_marble);
+	
+	auto mat_metal = make_shared<Metal>(color(.7, .6, .2), .7);
+	auto metal_ball = make_shared<Sphere>(point3(-20, 3,-7),  4, mat_metal);
 	
 	scene.add(globe);
+	scene.add(ground);
+	scene.add(glass);
+	scene.add(marble);
+	scene.add(metal_ball);
 }
 
 void setup_SCENE(void){
