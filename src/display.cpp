@@ -205,7 +205,7 @@ void scene_earthScene(void) {
 	auto metal_ball = make_shared<Sphere>(point3(-20, 3,-7),  4, mat_metal);
 	
 	auto mat_light = make_shared<Emitter>(color(10));
-	auto light_ball = make_shared<Sphere>(point3(3,1,0), .5, mat_light);
+	auto light_ball = make_shared<Sphere>(point3(3,1,1), .5, mat_light);
 	
 	scene.add(globe);
 	scene.add(ground);
