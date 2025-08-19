@@ -44,6 +44,23 @@ class Checker_Texture : public ITexture {
 		}
 };
 
+class Lollipop_Texture : public ITexture {
+	private:
+		double scale;
+		shared_ptr<ITexture> even;
+		shared_ptr<ITexture> odd;
+	
+	public:
+		Lollipop_Texture(double scale, shared_ptr<ITexture> even, shared_ptr<ITexture> odd) : scale(scale), even(even), odd(odd) {}
+		
+		Lollipop_Texture(double scale, const color& c0, const color& c1) : scale(scale), even(make_shared<Uniform_Color>(c0)), odd(make_shared<Uniform_Color>(c1)) {}
+		
+		// Checker the entire space, for now
+		color value(const double u, const double v, const point3& p) const override {
+			return (int(scale*(u+v)) % 2) ? odd->value(u, v, p) : even->value(u, v, p);
+		}
+};
+
 class IMG_Texture : public ITexture {
 	private:
 		IMG image;

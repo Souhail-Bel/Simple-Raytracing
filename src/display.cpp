@@ -207,12 +207,17 @@ void scene_earthScene(void) {
 	auto mat_light = make_shared<Emitter>(color(10));
 	auto light_ball = make_shared<Sphere>(point3(3,1,1), .5, mat_light);
 	
+	auto lollipop = make_shared<Lollipop_Texture>(10, color(0), color(90, .1, .4));
+	auto mat_lollipop = make_shared<Emitter>(lollipop);
+	auto sph_lolli = make_shared<Sphere>(point3(-5,2,0), 1.5, mat_lollipop);
+	
 	scene.add(globe);
 	scene.add(ground);
 	scene.add(glass);
 	scene.add(marble);
 	scene.add(metal_ball);
 	scene.add(light_ball);
+	scene.add(sph_lolli);
 }
 
 void setup_SCENE(void){
