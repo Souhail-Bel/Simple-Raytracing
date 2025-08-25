@@ -1,5 +1,5 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef SHAPES_H
+#define SHAPES_H
 
 #include "utils.h"
 #include "defs/hittable.h"

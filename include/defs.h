@@ -7,6 +7,6 @@
 #include "defs/hittable.h"
 #include "defs/texture.h"
 #include "defs/material.h"
-#include "defs/sphere.h"
+#include "defs/shapes.h"
 
 #endif
