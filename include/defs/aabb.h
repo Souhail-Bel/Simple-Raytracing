@@ -4,19 +4,34 @@
 #include "utils.h"
 
 class AABB {
+	private:
+		void pad_to_min() {
+			double delta = .0001;
+			
+			if(x_i.size() < delta) x_i = x_i.expand(delta);
+			if(y_i.size() < delta) y_i = y_i.expand(delta);
+			if(z_i.size() < delta) z_i = z_i.expand(delta);
+		}
+	
 	public:
 		interval x_i, y_i, z_i;
 		
 		AABB() {}
 		
-		AABB(const interval& inter) : x_i(inter), y_i(inter), z_i(inter) {}
+		AABB(const interval& inter) : x_i(inter), y_i(inter), z_i(inter) {
+			pad_to_min();
+		}
 		
-		AABB(const interval& x_i, const interval& y_i, const interval& z_i) : x_i(x_i), y_i(y_i), z_i(z_i) {}
+		AABB(const interval& x_i, const interval& y_i, const interval& z_i) : x_i(x_i), y_i(y_i), z_i(z_i) {
+			pad_to_min();
+		}
 		
 		AABB(const point3& A, const point3& B) {
 			x_i = interval(std::min(A[0], B[0]), std::max(A[0], B[0]));
 			y_i = interval(std::min(A[1], B[1]), std::max(A[1], B[1]));
 			z_i = interval(std::min(A[2], B[2]), std::max(A[2], B[2]));
+			
+			pad_to_min();
 		}
 		
 		AABB(const AABB& box_0, const AABB& box_1) {
