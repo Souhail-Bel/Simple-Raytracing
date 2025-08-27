@@ -4,10 +4,12 @@
 #include "utils.h"
 #include "defs/hittable.h"
 
-class Plane : public IHittable {
+class Quad : public IHittable {
 	private:
 		point3 Q;
 		vec3 u, v;
+		vec3 w;
+		
 		shared_ptr<IMaterial> mat;
 		AABB bbox;
 		
@@ -15,9 +17,11 @@ class Plane : public IHittable {
 		double d;
 	
 	public:
-		Plane(const point3& Q, const vec3& u, const vec3& v, shared_ptr<IMaterial> mat) : Q(Q), u(u), v(v), mat(mat) {
-			normal = normalized(cross(u, v));
+		Quad(const point3& Q, const vec3& u, const vec3& v, shared_ptr<IMaterial> mat) : Q(Q), u(u), v(v), mat(mat) {
+			vec3 n = cross(u, v);
+			normal = normalized(n);
 			d = dot(normal, Q);
+			w = n / dot(n, n);
 			
 			bbox = AABB(
 				AABB(Q, Q+u+v),
@@ -37,6 +41,17 @@ class Plane : public IHittable {
 			if(!ray_t.has_closed(t)) return false;
 			
 			point3 intersection = r.at(t);
+			vec3 p = intersection - Q;
+			auto alpha = dot(w, cross(p, v));
+			auto beta  = dot(w, cross(u, p));
+			
+			if(!interval::unit.has_closed(alpha)
+				|| !interval::unit.has_closed(beta))
+				return false;
+			
+			rec.u = alpha;
+			rec.v = beta;
+			
 			
 			rec.t = t;
 			rec.p = intersection;
