@@ -84,4 +84,13 @@ class AABB {
 const AABB AABB::empty    = AABB(interval::empty);
 const AABB AABB::universe = AABB(interval::universe);
 
+
+static inline point3 aabb_centroid(const AABB& a) {
+	return 0.5 * point3(
+		a.x_i.min + a.x_i.max,
+		a.y_i.min + a.y_i.max,
+		a.z_i.min + a.z_i.max
+	);
+}
+
 #endif

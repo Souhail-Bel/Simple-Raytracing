@@ -12,7 +12,8 @@ using namespace std;
 
 #include "display.h"
 #include "defs.h"
-#include "bvh.h"
+//#include "bvh.h"
+#include "lbvh.h"
 #include "camera.h"
 
 // Scene parameters
@@ -224,7 +225,8 @@ void setup_SCENE(void){
 	
 	scene_earthScene();
 	
-	scene = hittable_list(make_shared<BVH_node>(scene));
+	// scene = hittable_list(make_shared<BVH_node>(scene));
+	scene = hittable_list(make_shared<LBVH>(scene));
 	
 	cam = Camera(scene);
 	
