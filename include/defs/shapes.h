@@ -4,6 +4,50 @@
 #include "utils.h"
 #include "defs/hittable.h"
 
+class Plane : public IHittable {
+	private:
+		point3 Q;
+		vec3 u, v;
+		shared_ptr<IMaterial> mat;
+		AABB bbox;
+		
+		vec3 normal;
+		double d;
+	
+	public:
+		Plane(const point3& Q, const vec3& u, const vec3& v, shared_ptr<IMaterial> mat) : Q(Q), u(u), v(v), mat(mat) {
+			normal = normalized(cross(u, v));
+			d = dot(normal, Q);
+			
+			bbox = AABB(
+				AABB(Q, Q+u+v),
+				AABB(Q+u, Q+v)
+			);
+		}
+		
+		AABB bounding_box() const override {return bbox;}
+		
+		bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
+			auto denom = dot(normal, r.direction());
+			
+			if(std::fabs(denom) < 1e-8) return false;
+		
+			auto t = (d - dot(normal, r.origin())) / denom;
+			
+			if(!ray_t.has_closed(t)) return false;
+			
+			point3 intersection = r.at(t);
+			
+			rec.t = t;
+			rec.p = intersection;
+			rec.mat = mat;
+			rec.set_face_normal(r, normal);
+			
+			return true;
+		}
+};
+
+
 // Sphere to inherit from hittable interface
 
 class Sphere : public IHittable {
@@ -79,5 +123,7 @@ class Sphere : public IHittable {
 			return true;
 		}
 };
+
+
 
 #endif
