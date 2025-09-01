@@ -15,7 +15,7 @@ struct BVH_node {
 
 class LBVH : public IHittable {
 	private:
-		int leafThreshold = 4;
+		static constexpr int leafThreshold = 4;
 		std::vector<BVH_node> nodes;
 		std::vector<std::shared_ptr<IHittable>> primitives_register;
 		
@@ -30,17 +30,35 @@ class LBVH : public IHittable {
 		
 		LBVH(const std::vector<std::shared_ptr<IHittable>>& objects) {
 			if(objects.empty()) return;
-			std::vector<ObjectDef> entries;
-			entries.reserve(objects.size());
 			
-			for(auto& obj : objects){
-				AABB box = obj -> bounding_box();
-				entries.push_back({obj, box, aabb_centroid(box)});
+			const size_t object_count = objects.size();
+			
+			std::vector<ObjectDef> entries(object_count);
+			
+			//#pragma omp parallel for
+			// For some reason, this deletes a random object from the scene if not indexed
+			// for(auto& obj : objects){
+				// AABB box = obj -> bounding_box();
+				// entries.push_back({obj, box, aabb_centroid(box)});
+			// }
+			
+			for(size_t i = 0; i < object_count; i++){
+				AABB box = objects[i] -> bounding_box();
+				entries[i] = {objects[i], box, aabb_centroid(box)};
 			}
 			
-			nodes.reserve(objects.size() * 2);
-			primitives_register.reserve(objects.size());
-			construct(entries, 0, entries.size());
+			nodes.reserve(object_count * 2);
+			primitives_register.reserve(object_count);
+			
+			// Parallel recursion
+			#pragma omp parallel
+			{
+				// Call executed once per thread
+				#pragma omp single
+				{
+					construct(entries, 0, entries.size());
+				}
+			}
 		}
 		
 		AABB bounding_box() const override {
@@ -54,16 +72,15 @@ class LBVH : public IHittable {
 			std::vector<ObjectDef>& entries,
 			size_t start, size_t end
 		) {
-			uint32_t idx = nodes.size();
+			const uint32_t idx = nodes.size();
 			nodes.emplace_back();
 			
 			
-			// Add omp?
 			AABB bbox = AABB::empty;
 			for(size_t obj_index = start; obj_index < end; obj_index++)
 				bbox = AABB(bbox, entries[obj_index].bbox);
 			
-			size_t n = end - start;
+			const size_t n = end - start;
 			BVH_node& node = nodes[idx];
 			node.bbox = bbox;
 			
@@ -73,7 +90,7 @@ class LBVH : public IHittable {
 				node.leaf = true;
 				node.axis = 0;
 				for(size_t i = start; i < end; i++)
-					primitives_register.push_back(entries[i].obj);
+					primitives_register.emplace_back(entries[i].obj);
 				return idx;
 			}
 			
@@ -88,7 +105,7 @@ class LBVH : public IHittable {
 				node.leaf = true;
 				node.axis = axis;
 				for(size_t i = start; i < end; i++)
-					primitives_register.push_back(entries[i].obj);
+					primitives_register.emplace_back(entries[i].obj);
 				return idx;
 			}
 			
@@ -116,9 +133,11 @@ class LBVH : public IHittable {
 			if(nodes.empty()) return false;
 			
 			bool got_hit = false;
-			uint32_t stack[512];
+			uint32_t stack[64];
 			int sp = 0;
 			stack[sp++] = 0;
+			
+			const vec3 ray_dir = r.direction();
 			
 			while(sp > 0) {
 				uint32_t idx = stack[--sp];
@@ -137,7 +156,7 @@ class LBVH : public IHittable {
 						}
 					}
 				} else {
-					if(r.direction()[node.axis] < 0) {
+					if(ray_dir[node.axis] < 0) {
 						stack[sp++] = node.left;
 						stack[sp++] = node.right;
 					} else {

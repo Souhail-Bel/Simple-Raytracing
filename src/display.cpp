@@ -223,7 +223,7 @@ void scene_earthScene(void) {
 
 void setup_SCENE(void){
 	
-	scene_earthScene();
+	scene_bookScene();
 	
 	// scene = hittable_list(make_shared<BVH_node>(scene));
 	scene = hittable_list(make_shared<LBVH>(scene));
