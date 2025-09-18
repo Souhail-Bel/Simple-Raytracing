@@ -55,6 +55,8 @@ class Camera {
 		
 		float FOV = 120; // In degrees
 		
+		float speed = 0.1;
+		
 		color background;
 		
 		Camera() {}
@@ -128,11 +130,23 @@ class Camera {
 		}
 		
 		void ascend(void) {
-			static vec3 deltaU = vec3(0, 0.01, 0);
-			static vec3 deltaV = vec3(1);
+			static vec3 deltaU = vec3(0, 0, -0.1);
+			static vec3 deltaV = vec3(0.1);
 			
 			camera_up += deltaV;
 			eye_point += deltaU;
+		}
+		
+		void forward(void) {
+			eye_point += vec3(0,0,-speed);
+		}
+		
+		void rise(void) {
+			eye_point += vec3(0,speed,0);
+		}
+		
+		void right(void) {
+			eye_point += vec3(speed,0,0);
 		}
 };
 

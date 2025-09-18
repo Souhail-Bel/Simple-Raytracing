@@ -83,10 +83,38 @@ void handle_INPUT(void){
 	while(SDL_PollEvent(&g_event)){
 		if(g_event.type == SDL_QUIT) is_running = false;
 		
-		// if(g_event.type == SDL_KEYDOWN){
+		if(g_event.type == SDL_KEYDOWN){
 			// cout << "Key down:" << SDL_GetKeyName(g_event.key.keysym.sym) << endl;
 			// cout.flush();
-		// }
+			switch(g_event.key.keysym.sym) {
+				case SDLK_z:
+					cam.forward();
+					break;
+				case SDLK_e:
+					cam.rise();
+					break;
+				case SDLK_d:
+					cam.right();
+					break;
+				case SDLK_s:
+					cam.speed *= -1;
+					cam.forward();
+					cam.speed *= -1;
+					break;
+				case SDLK_q:
+					cam.speed *= -1;
+					cam.right();
+					cam.speed *= -1;
+					break;
+				case SDLK_a:
+					cam.speed *= -1;
+					cam.rise();
+					cam.speed *= -1;
+					break;
+				default:
+					break;
+			}
+		}
 	}
 }
 
@@ -95,7 +123,7 @@ void update_RENDER(void){
 	
 	cam.compute_FRAME();
 	// cam.ascend();
-	// cam.refocus();
+	cam.refocus();
 	
 	// Optimized approach
 	// using Lock/Unlock texture on GPU
@@ -212,6 +240,10 @@ void scene_earthScene(void) {
 	auto mat_lollipop = make_shared<Emitter>(lollipop);
 	auto sph_lolli = make_shared<Sphere>(point3(-5,2,0), 1.5, mat_lollipop);
 	
+	auto lollipop2 = make_shared<Lollipop_Texture>(15, color(.4,90,.1), color(.2,.1,90));
+	auto mat_lollipop2 = make_shared<Emitter>(lollipop2);
+	auto pla_lolli = make_shared<Quad>(point3(-5,-2,3),vec3(0,3,0),vec3(3,0,3),mat_lollipop2);
+	
 	scene.add(globe);
 	scene.add(ground);
 	scene.add(glass);
@@ -219,11 +251,34 @@ void scene_earthScene(void) {
 	scene.add(metal_ball);
 	scene.add(light_ball);
 	scene.add(sph_lolli);
+	scene.add(pla_lolli);
+}
+
+void scene_cornellScene(void) {
+	float dim = 5;
+	
+	auto green_mat = make_shared<Lambertian>(color(0, 1, 0));
+	auto red_mat   = make_shared<Lambertian>(color(1, 0, 0));
+	auto white_mat = make_shared<Lambertian>(color(1, 1, 1));
+	
+	auto left_wall = make_shared<Quad>(
+		point3(-dim/2.,0,0),
+		vec3(0,dim,0),
+		vec3(0,0,dim),
+	red_mat);
+	
+	auto back_wall = make_shared<Quad>(
+		point3(0,0,0),
+		vec3(0,dim,0),
+		vec3(-dim,0,0),
+	white_mat);
+	
+	scene.add(left_wall);
 }
 
 void setup_SCENE(void){
 	
-	scene_bookScene();
+	scene_earthScene();
 	
 	// scene = hittable_list(make_shared<BVH_node>(scene));
 	scene = hittable_list(make_shared<LBVH>(scene));
@@ -235,6 +290,8 @@ void setup_SCENE(void){
 	cam.camera_up = vec3(0,1,0);
 	
 	cam.FOV = 100;
+	
+	cam.speed = 0.1;
 	
 	cam.background = color(.1, 0.08, 0.07);
 	
