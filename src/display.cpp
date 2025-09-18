@@ -78,6 +78,17 @@ void close_SDL(void){
 	SDL_Quit();
 }
 
+// Camera controls:
+
+	// Camera position:
+		// E/A: Rise/Lower
+		// Z/S: Forward/Backward
+		// D/Q: Right/Left
+	
+	// Focus point position:
+		// O/U: Rise/Lower
+		// I/K: Forward/Backward
+		// L/J: Right/Left
 
 void handle_INPUT(void){
 	while(SDL_PollEvent(&g_event)){
@@ -109,6 +120,31 @@ void handle_INPUT(void){
 				case SDLK_a:
 					cam.speed *= -1;
 					cam.rise();
+					cam.speed *= -1;
+					break;
+					
+				case SDLK_i:
+					cam.foc_forward();
+					break;
+				case SDLK_o:
+					cam.foc_rise();
+					break;
+				case SDLK_l:
+					cam.foc_right();
+					break;
+				case SDLK_k:
+					cam.speed *= -1;
+					cam.foc_forward();
+					cam.speed *= -1;
+					break;
+				case SDLK_j:
+					cam.speed *= -1;
+					cam.foc_right();
+					cam.speed *= -1;
+					break;
+				case SDLK_u:
+					cam.speed *= -1;
+					cam.foc_rise();
 					cam.speed *= -1;
 					break;
 				default:
@@ -254,12 +290,12 @@ void scene_earthScene(void) {
 	scene.add(pla_lolli);
 }
 
-void scene_cornellScene(void) {
-	float dim = 5;
+void scene_cornellScene(float dim) {
 	
 	auto green_mat = make_shared<Lambertian>(color(0, 1, 0));
 	auto red_mat   = make_shared<Lambertian>(color(1, 0, 0));
-	auto white_mat = make_shared<Lambertian>(color(1, 1, 1));
+	auto white_mat = make_shared<Lambertian>(color(1));
+	auto emit_mat  = make_shared<Emitter>(color(.5));
 	
 	auto left_wall = make_shared<Quad>(
 		point3(-dim/2.,0,0),
@@ -267,17 +303,53 @@ void scene_cornellScene(void) {
 		vec3(0,0,dim),
 	red_mat);
 	
-	auto back_wall = make_shared<Quad>(
-		point3(0,0,0),
+	auto right_wall = make_shared<Quad>(
+		point3(dim/2.,0,0),
 		vec3(0,dim,0),
-		vec3(-dim,0,0),
+		vec3(0,0,dim),
+	green_mat);
+	
+	auto back_wall = make_shared<Quad>(
+		point3(-dim/2.,0,0),
+		vec3(0,dim,0),
+		vec3(dim,0,0),
 	white_mat);
 	
+	auto ground = make_shared<Quad>(
+		point3(-dim/2.,0,0),
+		vec3(0,0,dim),
+		vec3(dim,0,0),
+	white_mat);
+	
+	auto ceiling = make_shared<Quad>(
+		point3(-dim/2.,dim,0),
+		vec3(0,0,dim),
+		vec3(dim,0,0),
+	white_mat);
+	
+	auto light_panel = make_shared<Quad>(
+		point3(-dim/2.+dim/3,dim-dim/100,dim/3),
+		vec3(0,0,dim/3),
+		vec3(dim/3,0,0),
+	emit_mat);
+	
+    auto earth_texture = make_shared<IMG_Texture>("1024px-Nasa_land_ocean_ice_8192.jpg");
+    auto earth_surface = make_shared<Lambertian>(earth_texture);
+    auto globe = make_shared<Sphere>(point3(0,dim/2,0), dim/3, earth_surface);
+	
 	scene.add(left_wall);
+	scene.add(right_wall);
+	scene.add(back_wall);
+	scene.add(ground);
+	scene.add(ceiling);
+	scene.add(light_panel);
+	scene.add(globe);
 }
 
 void setup_SCENE(void){
 	
+	
+	float dim = 5;
 	scene_earthScene();
 	
 	// scene = hittable_list(make_shared<BVH_node>(scene));
@@ -286,7 +358,9 @@ void setup_SCENE(void){
 	cam = Camera(scene);
 	
 	cam.eye_point = point3(3,2,5);
-	cam.foc_point = point3(0,0,0);
+	// cam.eye_point = point3(0,dim/2,dim);
+	// cam.foc_point = point3(0,dim/2,-dim);
+	cam.foc_point = point3(0);
 	cam.camera_up = vec3(0,1,0);
 	
 	cam.FOV = 100;
@@ -297,7 +371,7 @@ void setup_SCENE(void){
 	
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE
-		cam.samples_per_pixel = 10;
+		cam.samples_per_pixel = 100;
 	#endif
 	cam.max_bounces = 50;
 	

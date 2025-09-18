@@ -57,7 +57,7 @@ class Camera {
 		
 		float speed = 0.1;
 		
-		color background;
+		color background = color(0);
 		
 		Camera() {}
 		
@@ -135,6 +135,18 @@ class Camera {
 			
 			camera_up += deltaV;
 			eye_point += deltaU;
+		}
+		
+		void foc_forward(void) {
+			foc_point += vec3(0,0,-speed);
+		}
+		
+		void foc_rise(void) {
+			foc_point += vec3(0,speed,0);
+		}
+		
+		void foc_right(void) {
+			foc_point += vec3(speed,0,0);
 		}
 		
 		void forward(void) {
