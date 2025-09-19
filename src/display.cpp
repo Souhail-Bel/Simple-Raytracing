@@ -252,6 +252,7 @@ void scene_bookScene(void) {
 }
 
 void scene_earthScene(void) {
+	
     auto earth_texture = make_shared<IMG_Texture>("1024px-Nasa_land_ocean_ice_8192.jpg");
     auto earth_surface = make_shared<Lambertian>(earth_texture);
     auto globe = make_shared<Sphere>(point3(0,2,0), 2, earth_surface);
@@ -296,6 +297,9 @@ void scene_cornellScene(float dim) {
 	auto red_mat   = make_shared<Lambertian>(color(1, 0, 0));
 	auto white_mat = make_shared<Lambertian>(color(1));
 	auto emit_mat  = make_shared<Emitter>(color(.5));
+	auto glass_mat = make_shared<Dielectric>(2.5);
+	auto earth_texture = make_shared<IMG_Texture>("1024px-Nasa_land_ocean_ice_8192.jpg");
+    auto earth_surface = make_shared<Lambertian>(earth_texture);
 	
 	auto left_wall = make_shared<Quad>(
 		point3(-dim/2.,0,0),
@@ -333,9 +337,10 @@ void scene_cornellScene(float dim) {
 		vec3(dim/3,0,0),
 	emit_mat);
 	
-    auto earth_texture = make_shared<IMG_Texture>("1024px-Nasa_land_ocean_ice_8192.jpg");
-    auto earth_surface = make_shared<Lambertian>(earth_texture);
     auto globe = make_shared<Sphere>(point3(0,dim/2,0), dim/3, earth_surface);
+	
+
+	auto glass = make_shared<Sphere>(point3(-dim/4,dim/2-dim/4,dim/4), dim/5, glass_mat);
 	
 	scene.add(left_wall);
 	scene.add(right_wall);
@@ -344,34 +349,37 @@ void scene_cornellScene(float dim) {
 	scene.add(ceiling);
 	scene.add(light_panel);
 	scene.add(globe);
+	scene.add(glass);
 }
 
 void setup_SCENE(void){
-	
-	
 	float dim = 5;
-	scene_earthScene();
+	scene_cornellScene(dim);
 	
-	// scene = hittable_list(make_shared<BVH_node>(scene));
 	scene = hittable_list(make_shared<LBVH>(scene));
+	// scene = hittable_list(make_shared<BVH_node>(scene));
 	
 	cam = Camera(scene);
 	
-	cam.eye_point = point3(3,2,5);
-	// cam.eye_point = point3(0,dim/2,dim);
-	// cam.foc_point = point3(0,dim/2,-dim);
-	cam.foc_point = point3(0);
+	
+	cam.eye_point = point3(0,dim/2,dim);
+	cam.foc_point = point3(0,dim/2,-dim);
+	// cam.eye_point = point3(3,2,5);
+	// cam.foc_point = point3(0);
 	cam.camera_up = vec3(0,1,0);
 	
 	cam.FOV = 100;
 	
 	cam.speed = 0.1;
 	
-	cam.background = color(.1, 0.08, 0.07);
+	cam.background = color(0);
+	// cam.background = color(.1, 0.08, 0.07);
+	// cam.background = .2*color(0.53, 0.806, 1.2);
+	
 	
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE
-		cam.samples_per_pixel = 100;
+		cam.samples_per_pixel = 200;
 	#endif
 	cam.max_bounces = 50;
 	

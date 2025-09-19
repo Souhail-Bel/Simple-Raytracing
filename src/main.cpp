@@ -25,20 +25,20 @@ int main(int argc, char** argv){
 	is_running = true;
 	
 	while(is_running){
-		auto start_time = high_resolution_clock::now();
+		// auto start_time = high_resolution_clock::now();
 		
-		handle_INPUT();
+		// handle_INPUT();
 		
 		update_RENDER();
 		
-		auto end_time	= high_resolution_clock::now();
+		// auto end_time	= high_resolution_clock::now();
 
-		auto delta_time = duration_cast<microseconds>(end_time - start_time);
+		// auto delta_time = duration_cast<microseconds>(end_time - start_time);
 		
-		cout << "FPS: " << 1e6/delta_time.count() << endl;
+		// cout << "FPS: " << 1e6/delta_time.count() << endl;
 		
 		// this_thread::sleep_for(chrono::milliseconds(FRAME_DELAY_MS));
-		// is_running = false;
+		is_running = false;
 	}
 	
 	getchar();
