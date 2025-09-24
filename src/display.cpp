@@ -273,13 +273,18 @@ void scene_earthScene(void) {
 	auto mat_light = make_shared<Emitter>(color(10));
 	auto light_ball = make_shared<Sphere>(point3(3,1,1), .5, mat_light);
 	
-	auto lollipop = make_shared<Lollipop_Texture>(10, color(0), color(90, .1, .4));
-	auto mat_lollipop = make_shared<Emitter>(lollipop);
-	auto sph_lolli = make_shared<Sphere>(point3(-5,2,0), 1.5, mat_lollipop);
+	// auto lollipop = make_shared<Lollipop_Texture>(10, color(0), color(90, .1, .4));
+	// auto mat_lollipop = make_shared<Emitter>(lollipop);
+	// auto sph_lolli = make_shared<Sphere>(point3(-5,2,0), 1.5, mat_lollipop);
+	
+	auto sph_gas_shape = make_shared<Sphere>(point3(-5,2,0), 1.5,make_shared<Lambertian>(color(1)));
+	
+	auto sph_gas = make_shared<Constant_Medium>(sph_gas_shape, 0.5, color(1));
 	
 	auto lollipop2 = make_shared<Lollipop_Texture>(15, color(.4,90,.1), color(.2,.1,90));
 	auto mat_lollipop2 = make_shared<Emitter>(lollipop2);
 	auto pla_lolli = make_shared<Quad>(point3(-5,-2,3),vec3(0,3,0),vec3(3,0,3),mat_lollipop2);
+	
 	
 	scene.add(globe);
 	scene.add(ground);
@@ -287,7 +292,8 @@ void scene_earthScene(void) {
 	scene.add(marble);
 	scene.add(metal_ball);
 	scene.add(light_ball);
-	scene.add(sph_lolli);
+	scene.add(sph_gas);
+	// scene.add(sph_lolli);
 	scene.add(pla_lolli);
 }
 
@@ -295,9 +301,13 @@ void scene_cornellScene(float dim) {
 	
 	auto green_mat = make_shared<Lambertian>(color(0, 1, 0));
 	auto red_mat   = make_shared<Lambertian>(color(1, 0, 0));
+	auto blue_mat  = make_shared<Lambertian>(color(0, 0, 1));
 	auto white_mat = make_shared<Lambertian>(color(1));
-	auto emit_mat  = make_shared<Emitter>(color(.5));
-	auto glass_mat = make_shared<Dielectric>(2.5);
+	auto emit_mat  = make_shared<Emitter>(color(10));
+	// auto glass_mat = make_shared<Dielectric>(2);
+	auto metal_mat = make_shared<Metal>(color(.5), 0);
+	
+	
 	auto earth_texture = make_shared<IMG_Texture>("1024px-Nasa_land_ocean_ice_8192.jpg");
     auto earth_surface = make_shared<Lambertian>(earth_texture);
 	
@@ -317,7 +327,7 @@ void scene_cornellScene(float dim) {
 		point3(-dim/2.,0,0),
 		vec3(0,dim,0),
 		vec3(dim,0,0),
-	white_mat);
+	blue_mat);
 	
 	auto ground = make_shared<Quad>(
 		point3(-dim/2.,0,0),
@@ -337,10 +347,13 @@ void scene_cornellScene(float dim) {
 		vec3(dim/3,0,0),
 	emit_mat);
 	
-    auto globe = make_shared<Sphere>(point3(0,dim/2,0), dim/3, earth_surface);
+	auto globe = make_shared<Sphere>(point3(0,dim/2,0), dim/3, earth_surface);
+	// auto glass = make_shared<Sphere>(point3(-dim/4,dim/2-dim/4,dim/3), dim/5, glass_mat);
+	auto metal = make_shared<Sphere>(point3(dim/4,dim/2-dim/4,dim/3), dim/5, metal_mat);
 	
-
-	auto glass = make_shared<Sphere>(point3(-dim/4,dim/2-dim/4,dim/4), dim/5, glass_mat);
+	auto sph_gas_shape = make_shared<Sphere>(point3(-dim/4,dim/2-dim/4,dim/3), dim/5,make_shared<Lambertian>(color(0.7)));
+	
+	auto sph_gas = make_shared<Constant_Medium>(sph_gas_shape, 0.5, color(0.7));
 	
 	scene.add(left_wall);
 	scene.add(right_wall);
@@ -349,12 +362,15 @@ void scene_cornellScene(float dim) {
 	scene.add(ceiling);
 	scene.add(light_panel);
 	scene.add(globe);
-	scene.add(glass);
+	// scene.add(glass);
+	scene.add(sph_gas);
+	scene.add(metal);
 }
 
 void setup_SCENE(void){
 	float dim = 5;
 	scene_cornellScene(dim);
+	// scene_earthScene();
 	
 	scene = hittable_list(make_shared<LBVH>(scene));
 	// scene = hittable_list(make_shared<BVH_node>(scene));
@@ -379,7 +395,7 @@ void setup_SCENE(void){
 	
 	cam.init_CAMERA(WIDTH, HEIGHT);
 	#ifdef SAMPLING_MODE
-		cam.samples_per_pixel = 200;
+		cam.samples_per_pixel = 50;
 	#endif
 	cam.max_bounces = 50;
 	
